@@ -112,7 +112,5 @@ namespace ShopShoes
 			Console.ReadKey();
 			Console.Clear();
 		}
-
 	}
-
 }
