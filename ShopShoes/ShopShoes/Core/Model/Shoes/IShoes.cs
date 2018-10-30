@@ -4,6 +4,7 @@
 	{
 		int Size { get; }
 		int Price { get; }
+		string Brand { get; }
 		TypeColor Color { get; }
 		TypeMaterial Material { get; }
 		TypeShoes Type { get; } 

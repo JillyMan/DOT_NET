@@ -12,12 +12,22 @@
 
 		public TypeColor Color { get; private set; }
 
-		public AbstractShoes(int size, int price, TypeMaterial material, TypeShoes type)
+		public string Brand { get; private set; }
+
+		public AbstractShoes(int size, int price, string brand, TypeColor color, TypeMaterial material, TypeShoes type)
 		{
 			Size = size;
 			Price = price;
 			Material = material;
 			Type = type;
+			Color = color;
+			Brand = brand;
 		}
+
+		public override string ToString()
+		{
+			return "Shoes [Brand=" + Brand + ", Size=" + Size + ", Price=" + Price + ", Material=" + Material + ", Sex=" + Type + ", Color=" + Color + "]"; 
+		}
+
 	}
 }

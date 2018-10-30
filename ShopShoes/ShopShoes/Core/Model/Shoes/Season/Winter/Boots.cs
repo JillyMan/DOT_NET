@@ -2,8 +2,8 @@
 {
 	public class Boots : AbstractShoes, IShoesWinter
 	{
-		public Boots(int size, int price, TypeMaterial material, TypeShoes type) : 
-			base(size, price, material, type)
+		public Boots(int size, int price, string brand, TypeColor color, TypeMaterial material, TypeShoes type) : 
+			base(size, price, brand, color, material, type)
 		{
 		}
 	}

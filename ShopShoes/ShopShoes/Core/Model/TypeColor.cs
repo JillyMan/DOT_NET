@@ -11,7 +11,7 @@ namespace ShopShoes.Core.Model
 		BLACK,
 		WHITE,
 		RED,
-		GREN,
+		GREEN,
 		BLUE
 	}
 }

@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace ShopShoes.Core.Model.Shoes.Season.Summer
 {
-	public class Sandals : AbstractShoes, ISummerShoes
+	public class Sandals : AbstractShoes, IShoesSummer
 	{
-		public Sandals(int size, int price, TypeMaterial material, TypeShoes type) : 
-			base(size, price, material, type)
+		public Sandals(int size, int price, string brand, TypeColor color, TypeMaterial material, TypeShoes type) :
+			base(size, price, brand, color, material, type)
 		{
 		}
 	}

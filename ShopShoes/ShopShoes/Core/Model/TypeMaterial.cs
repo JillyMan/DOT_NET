@@ -2,7 +2,7 @@
 {
 	public enum TypeMaterial
 	{
-		LEATHER,
+		LEATHER = 0,
 		TEXTILES,
 		SYNTHETICS,
 		RUBBER
