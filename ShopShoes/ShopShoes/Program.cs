@@ -23,7 +23,7 @@ namespace ShopShoes
 			MakeSummerFamilyComplect();
 		}
 
-		public void MakeSummerFamilyComplect()
+		private void MakeSummerFamilyComplect()
 		{
 			Console.WriteLine("Assembly Summer family complect: ");
 			ComplectFamily<IShoesSummer> complect = 
@@ -38,26 +38,27 @@ namespace ShopShoes
 			Console.WriteLine("Man complect: ");
 			AssemblySummerComplect(complect.ManComplect, shop.GetSummerShoesMan());
 
-			Console.WriteLine("Price family complect = " + complect.FullPrice());
+			Console.WriteLine("Full price complect = " + complect.FullPrice());
 		}
 
 		private void AssemblySummerComplect(ComplectShoes<IShoesSummer> complectShoes, IList<IShoesSummer> shoesFromShop)
 		{
 			for (int i = 0; i < shoesFromShop.Count; ++i)
 			{
-				Console.WriteLine((i+1) + "----" + shoesFromShop[i]);
+				Console.WriteLine((i+1) + " ---- " + shoesFromShop[i]);
 			}
-			Console.WriteLine("Select shoes. If you wonna finish press 0");
-			bool result = false;
+			Console.WriteLine($"Select shoes [{1} , {shoesFromShop.Count}]. If you wonna finish press 0");
+			bool result;
 			do
 			{
+				result = true;
+				Console.WriteLine("Input number: ");
 				int input = GetInputFromConsole();
 				if (input > 0 && input <= shoesFromShop.Count)
 				{
-					result = true;
 					complectShoes.Add(shoesFromShop[input - 1]);
 				}
-				else if (input == -1)
+				else if(input == -1 || input >= shoesFromShop.Count)
 				{
 					Console.WriteLine("Incorrect input, please try again");
 				}
@@ -68,18 +69,22 @@ namespace ShopShoes
 			} while (result);
 		}
 
-		public int GetInputFromConsole()
+		private int GetInputFromConsole()
 		{
-			Console.WriteLine("Input number: ");
 			string inputLine = Console.ReadLine();
-			if(inputLine == null)
+			int result;
+			try
 			{
-				return -1;
+				result = Int32.Parse(inputLine);
 			}
-			return Int32.Parse(inputLine);
+			catch (FormatException e)
+			{
+				result = -1;
+			}
+			return result;
 		}
 
-		public void Sorting()
+		private void Sorting()
 		{
 			Console.WriteLine("Sort by materials");
 			foreach (var shoes in shop.GetSortByMaterial())
@@ -96,7 +101,7 @@ namespace ShopShoes
 			Sleep();
 		}
 
-		public void Filtering()
+		private void Filtering()
 		{
 			Console.WriteLine("--------------------");
 			Console.WriteLine("Filter by price (100, 200)");

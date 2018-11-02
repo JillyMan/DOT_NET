@@ -26,7 +26,7 @@
 
 		public override string ToString()
 		{
-			return "Shoes [Brand=" + Brand + ", Size=" + Size + ", Price=" + Price + ", Material=" + Material + ", Sex=" + Type + ", Color=" + Color + "]"; 
+			return "Shoes [Brand=" + Brand + ", Size=" + Size + ", Price=" + Price + ", Material=" + Material + ", Type=" + Type + ", Color=" + Color + "]"; 
 		}
 
 	}
