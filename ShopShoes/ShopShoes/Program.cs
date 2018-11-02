@@ -47,8 +47,8 @@ namespace ShopShoes
 			{
 				Console.WriteLine((i+1) + "----" + shoesFromShop[i]);
 			}
-			Console.WriteLine("Select shoes. If you wonna exit press 0");
-			bool result;
+			Console.WriteLine("Select shoes. If you wonna finish press 0");
+			bool result = false;
 			do
 			{
 				int input = GetInputFromConsole();
@@ -56,6 +56,10 @@ namespace ShopShoes
 				{
 					result = true;
 					complectShoes.Add(shoesFromShop[input - 1]);
+				}
+				else if (input == -1)
+				{
+					Console.WriteLine("Incorrect input, please try again");
 				}
 				else
 				{
@@ -68,6 +72,10 @@ namespace ShopShoes
 		{
 			Console.WriteLine("Input number: ");
 			string inputLine = Console.ReadLine();
+			if(inputLine == null)
+			{
+				return -1;
+			}
 			return Int32.Parse(inputLine);
 		}
 
