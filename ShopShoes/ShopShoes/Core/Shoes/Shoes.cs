@@ -23,7 +23,7 @@ namespace ShopShoes.Core.Shoes
 
 		public override string ToString()
 		{
-			return "Name: " + Name + ", Size" + Size + ", TypeMaterial" + TypeMaterial + ", PersonType: " + PersonType + ", SeasonType: " + SeasonType + ", Price: " + Price;
+			return "Name: " + Name + ", Size: " + Size + ", TypeMaterial: " + TypeMaterial + ", PersonType: " + PersonType + ", SeasonType: " + SeasonType + ", Price: " + Price;
 		}
 	}
 }

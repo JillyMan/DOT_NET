@@ -1,91 +1,51 @@
-﻿using System.Collections.Generic;
-using ShopShoes.Util;
-using ShopShoes.Core.Model;
-using ShopShoes.Core.Model.Shoes;
-using ShopShoes.Core.Model.Shoes.Season.Summer;
+﻿using ShopShoes.Builder;
+using ShopShoes.Complect;
+using ShopShoes.Core.Shoes;
+using ShopShoes.Core.Shoes.Types;
+using System;
+using System.Collections.Generic;
 
 namespace ShopShoes
 {
 	public class Shop
 	{
-		private List<IShoes> Shoes = new List<IShoes>();
-		private SorterShoes sorter = new SorterShoes();
-		private FilterShoes filter = new FilterShoes();
-
-		private IList<IShoesSummer> KidSummerShoes = new List<IShoesSummer>
-		{
-			new Sandals(32, 100, "brand-1", TypeColor.BLACK, TypeMaterial.LEATHER, TypeShoes.KID),
-			new Sandals(31, 200, "brand-2", TypeColor.RED, TypeMaterial.TEXTILES, TypeShoes.KID),
-			new Sandals(33, 300, "brand-3", TypeColor.GREEN, TypeMaterial.RUBBER, TypeShoes.KID),
-		};
-		private IList<IShoesSummer> WomanSummerShoes = new List<IShoesSummer>
-		{
-			new HighHeels(38, 100, "brand-1", TypeColor.BLUE, TypeMaterial.LEATHER),
-			new BalletShoes(37, 200, "brand-5", TypeColor.GREEN, TypeMaterial.TEXTILES),
-			new Sandals(37, 300, "brand-2", TypeColor.WHITE, TypeMaterial.RUBBER, TypeShoes.WOMAN),
-		};
-		private IList<IShoesSummer> ManSummerShoes = new List<IShoesSummer>
-		{
-			new Sandals(43, 145, "brand-1", TypeColor.BLACK, TypeMaterial.LEATHER, TypeShoes.MAN),
-			new Sandals(42, 231, "brand-6", TypeColor.RED, TypeMaterial.TEXTILES, TypeShoes.MAN),
-			new Sandals(43, 347, "brand-3", TypeColor.WHITE, TypeMaterial.RUBBER, TypeShoes.MAN),
-		};
-
+		public List<Shoes> Shoes;
+			
 		public Shop()
 		{
-			Init();
+			Shoes = new List<Shoes>()
+			{
+				new Shoes(41, "Shoes_1" , ShoesTypeMaterial.LEATHER,	ShoesPersonType.Man,	ShoesSeasonType.Summer, 100),
+				new Shoes(41, "Shoes_2" , ShoesTypeMaterial.RUBBER,		ShoesPersonType.Man,	ShoesSeasonType.Winter, 200),
+				new Shoes(41, "Shoes_3" , ShoesTypeMaterial.TEXTILES,	ShoesPersonType.Man,	ShoesSeasonType.Autumn, 300),
+				new Shoes(39, "Shoes_4" , ShoesTypeMaterial.LEATHER,	ShoesPersonType.Man,	ShoesSeasonType.Spring, 400),
+				new Shoes(41, "Shoes_5" , ShoesTypeMaterial.LEATHER,	ShoesPersonType.Woman,	ShoesSeasonType.Summer, 100),
+				new Shoes(41, "Shoes_6" , ShoesTypeMaterial.LEATHER,    ShoesPersonType.Woman,	ShoesSeasonType.Winter, 200),
+				new Shoes(39, "Shoes_7" , ShoesTypeMaterial.SYNTHETICS, ShoesPersonType.Woman,	ShoesSeasonType.Autumn, 300),
+				new Shoes(43, "Shoes_8" , ShoesTypeMaterial.LEATHER,	ShoesPersonType.Woman,	ShoesSeasonType.Spring, 400),
+				new Shoes(41, "Shoes_9" , ShoesTypeMaterial.TEXTILES,	ShoesPersonType.Kid,	ShoesSeasonType.Summer, 100),
+				new Shoes(41, "Shoes_10", ShoesTypeMaterial.SYNTHETICS, ShoesPersonType.Kid,	ShoesSeasonType.Summer, 200),
+				new Shoes(39, "Shoes_11", ShoesTypeMaterial.LEATHER,	ShoesPersonType.Kid,	ShoesSeasonType.Autumn, 300),
+				new Shoes(37, "Shoes_12", ShoesTypeMaterial.LEATHER,	ShoesPersonType.Kid,	ShoesSeasonType.Spring, 400),
+				new Shoes(37, "Shoes_12", ShoesTypeMaterial.LEATHER,    ShoesPersonType.Kid,    ShoesSeasonType.Summer, 400),
+				new Shoes(39, "Shoes_13", ShoesTypeMaterial.TEXTILES,	ShoesPersonType.Woman,	ShoesSeasonType.Spring, 100),
+				new Shoes(42, "Shoes_14", ShoesTypeMaterial.RUBBER,		ShoesPersonType.Man,	ShoesSeasonType.Winter, 200),
+				new Shoes(38, "Shoes_15", ShoesTypeMaterial.RUBBER,		ShoesPersonType.Kid,	ShoesSeasonType.Summer, 100),
+			};
+
 		}
 
-		private void Init()
+		public ShoesComplect GetComplect(IShoesComplectBuilder builder, int money)
 		{
-			Shoes.AddRange(KidSummerShoes);
-			Shoes.AddRange(WomanSummerShoes);
-			Shoes.AddRange(ManSummerShoes);
-		}
+			ShoesComplect complect = builder.Make(Shoes);
+			var fullPrice = complect.GetFullPrice();
 
-		public IList<IShoes> GetAll()
-		{
-			return Shoes;
-		}
+			if(fullPrice > money)
+			{
+				throw new Exception($"Not enough money. Have {money}, but need {fullPrice}");
+			}
+			return complect;
 
-		public IList<IShoesSummer> GetSummerShoesKid()
-		{
-			return KidSummerShoes;
-		}
-
-		public IList<IShoesSummer> GetSummerShoesWoman()
-		{
-			return WomanSummerShoes;
-		}
-
-		public IList<IShoesSummer> GetSummerShoesMan()
-		{
-			return ManSummerShoes;
-		}
-
-		public IEnumerable<IShoes> GetSortByPrice()
-		{
-			return sorter.SortByPrice(Shoes);
-		}
-
-		public IEnumerable<IShoes> GetSortByMaterial()
-		{
-			return sorter.SortByMaterial(Shoes);
-		}
-
-		public IEnumerable<IShoes> GetFilterBySize(int min, int max)
-		{
-			return filter.FilterBySize(Shoes, min, max);
-		}
-
-		public IEnumerable<IShoes> FilterByType(TypeShoes type)
-		{
-			return filter.FilterByType(Shoes, type);
-		}
-
-		public IEnumerable<IShoes> GetFilterByMaterial(TypeMaterial material)
-		{
-			return filter.FilterByMaterial(Shoes, material);
 		}
 	}
 }
