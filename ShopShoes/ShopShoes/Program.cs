@@ -1,116 +1,67 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using ShopShoes.Builder;
+using ShopShoes.Builder.Family;
+using ShopShoes.Builder.Kid;
+using ShopShoes.Builder.Woman;
 using ShopShoes.Complect;
-using ShopShoes.Core.Model;
-using ShopShoes.Core.Model.Shoes;
-using ShopShoes.Core.Model.Shoes.Season.Summer;
+using ShopShoes.Core.Shoes.Util;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ShopShoes
 {
 	public class Program
 	{
-		private Shop shop = new Shop();
-
-		public static void Main(string[] args)
+		public static void Main(String[] args)
 		{
 			new Program().Run();
 		}
 
-		public void Run()
+		private void Run()
 		{
-			Sorting();
-			Filtering();
-			MakeSummerFamilyComplect();
-		}
-
-		public void MakeSummerFamilyComplect()
-		{
-			Console.WriteLine("Assembly Summer family complect: ");
-			ComplectFamily<IShoesSummer> complect = 
-				new ComplectFamily<IShoesSummer>(new List<IShoesSummer>(), new List<IShoesSummer>(), new List<IShoesSummer>());
-
-			Console.WriteLine("Kid complect: ");
-			AssemblySummerComplect(complect.KidComplect, shop.GetSummerShoesKid());
-
-			Console.WriteLine("Woman complect: ");
-			AssemblySummerComplect(complect.WomanComplect, shop.GetSummerShoesWoman());
-
-			Console.WriteLine("Man complect: ");
-			AssemblySummerComplect(complect.ManComplect, shop.GetSummerShoesMan());
-
-			Console.WriteLine("Price family complect = " + complect.FullPrice());
-		}
-
-		private void AssemblySummerComplect(ComplectShoes<IShoesSummer> complectShoes, IList<IShoesSummer> shoesFromShop)
-		{
-			for (int i = 0; i < shoesFromShop.Count; ++i)
+			Shop shop = new Shop();
+			IShoesComplectBuilder familyComplectBuilder = new FamilySummerComplectBuilder();
+			ShoesComplect familyComplect = null;
+			Console.BackgroundColor = ConsoleColor.Red;
+			Console.WriteLine("Make Family summer complect for price NO MORE 1000 ");
+			Console.BackgroundColor = ConsoleColor.Black;
+			try
 			{
-				Console.WriteLine((i+1) + "----" + shoesFromShop[i]);
+				familyComplect = shop.GetComplect(familyComplectBuilder, 1000);
+				PrintComplectToConsole(familyComplect);
 			}
-			Console.WriteLine("Select shoes. If you wonna exit press 0");
-			bool result;
-			do
+			catch (Exception e)
 			{
-				int input = GetInputFromConsole();
-				if (input > 0 && input <= shoesFromShop.Count)
-				{
-					result = true;
-					complectShoes.Add(shoesFromShop[input - 1]);
-				}
-				else
-				{
-					result = false;
-				}
-			} while (result);
+				Console.WriteLine(e.Message);
+			}
+
+			IShoesComplectBuilder kidSummerComplectBuilder = new KidSummerComplectBuilder();
+			ShoesComplect kidComplect;
+			int priceForKidComplect = 900;
+			Console.BackgroundColor = ConsoleColor.Red;
+			Console.WriteLine($"Make Kid summer complect for price NO MORE {priceForKidComplect }");
+			Console.BackgroundColor = ConsoleColor.Black;
+			try
+			{
+				kidComplect = shop.GetComplect(kidSummerComplectBuilder, priceForKidComplect);
+				PrintComplectToConsole(kidComplect);
+			}
+			catch(Exception e)
+			{
+				Console.WriteLine(e.Message);
+			}
 		}
 
-		public int GetInputFromConsole()
+		private void PrintComplectToConsole(ShoesComplect complect)
 		{
-			Console.WriteLine("Input number: ");
-			string inputLine = Console.ReadLine();
-			return Int32.Parse(inputLine);
-		}
-
-		public void Sorting()
-		{
-			Console.WriteLine("Sort by materials");
-			foreach (var shoes in shop.GetSortByMaterial())
+			Console.WriteLine($"The cost complect {complect.GetFullPrice()}");
+			
+			foreach (var shoes in complect.Shoes.SortByMaterial())
 			{
 				Console.WriteLine(shoes);
 			}
-			Console.WriteLine("--------------------");
-			Console.WriteLine("Sort by Price");
-			foreach (var shoes in shop.GetSortByPrice())
-			{
-				Console.WriteLine(shoes);
-			}
-			Console.WriteLine("--------------------\n");
-			Sleep();
-		}
-
-		public void Filtering()
-		{
-			Console.WriteLine("--------------------");
-			Console.WriteLine("Filter by price (100, 200)");
-			foreach (var shoes in shop.GetFilterBySize(100, 200))
-			{
-				Console.WriteLine(shoes);
-			}
-
-			Console.WriteLine("Filter by Material.LEATHER");
-			foreach (var shoes in shop.GetFilterByMaterial(TypeMaterial.LEATHER))
-			{
-				Console.WriteLine(shoes);
-			}
-			Console.WriteLine("--------------------");
-			Sleep();
-		}
-
-		private void Sleep()
-		{
-			Console.WriteLine("Press Any button: ");
-			Console.ReadKey();
-			Console.Clear();
 		}
 	}
 }
