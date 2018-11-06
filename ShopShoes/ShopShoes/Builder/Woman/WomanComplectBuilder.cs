@@ -32,7 +32,7 @@ namespace ShopShoes.Builder.Woman
 			if (list.Count < _seasons.Count)
 			{
 				var missedSeasons = _seasons.Except(list.Select(x => x.SeasonType));
-				throw new Exception($"not enough shoes for all seasons. missed - { string.Join(",", missedSeasons.Select(x => Enum.GetName(typeof(ShoesSeasonType), x)))}");
+				throw new Exception($"not enough shoes for all seasons. missed - {string.Join(",", missedSeasons)}");
 			}
 
 			shoes = list;

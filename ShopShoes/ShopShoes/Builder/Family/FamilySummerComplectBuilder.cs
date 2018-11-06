@@ -27,7 +27,7 @@ namespace ShopShoes.Builder.Family
 			if(list.Count < _persons.Count)
 			{
 				var missedPersons = _persons.Except(list.Select(x => x.PersonType));
-				throw new Exception($"not enough shoes for all persosn in family. missed - {string.Join(",", missedPersons.Select(x => Enum.GetName(typeof(ShoesPersonType), x)))}");
+				throw new Exception($"not enough shoes for all persosn in family. missed - {string.Join(",", missedPersons)}");
 			}
 			shoes = list;
 		}

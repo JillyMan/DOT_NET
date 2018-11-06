@@ -3,6 +3,8 @@ using ShopShoes.Builder.Family;
 using ShopShoes.Builder.Kid;
 using ShopShoes.Builder.Woman;
 using ShopShoes.Complect;
+using ShopShoes.Core.Shoes;
+using ShopShoes.Core.Shoes.Types;
 using ShopShoes.Core.Shoes.Util;
 using System;
 using System.Collections.Generic;
