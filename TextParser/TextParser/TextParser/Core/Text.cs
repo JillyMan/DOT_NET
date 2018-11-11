@@ -5,9 +5,25 @@ using System.Text;
 
 namespace TextParser.Core
 {
-    public class Text
-    {
+	public class Text
+	{
 		public IList<Sentence> Sentences { get; }
+
+		public Sentence this[int index]
+		{
+			get
+			{
+				return Sentences[index];
+			}
+		}
+
+		public int CountSentences
+		{
+			get
+			{
+				return Sentences.Count;
+			}
+		}
 
 		public Text()
 		{

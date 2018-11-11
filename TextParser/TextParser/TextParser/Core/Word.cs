@@ -9,6 +9,26 @@ namespace TextParser.Core
     {
 		public IList<Simbol> Simbols { get; }
 
+		public int Length
+		{
+			get
+			{
+				return Simbols.Count;
+			}
+		}
+
+		public Simbol this[int i]
+		{
+			get
+			{
+				return Simbols[i];
+			}
+			set
+			{
+				Simbols[i] = value;
+			}
+		}
+
 		public Word(IList<Simbol> simbols)
 		{
 			Simbols = simbols;
@@ -61,6 +81,23 @@ namespace TextParser.Core
 			}
 
 			return result;
+		}
+
+		public static Word Parse(string str)
+		{
+			if(str != null)
+			{
+				IList<Simbol> simbols = new List<Simbol>();
+				
+				for(int i = 0; i < str.Length; ++i)
+				{
+					simbols.Add(new Simbol(str[i].ToString()));
+				}
+
+				return new Word(simbols);
+			}
+
+			return null;
 		}
 
 	}

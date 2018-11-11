@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace TextParser.Core
-{
-   public struct Simbol
+{       
+	//TODO: In simbol save static LetterFactory
+	public struct Simbol
 	{
 		public string simbol;
 
