@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using TextParser.Core;
-using TextParser.Core.Util;
 
 namespace TextParser.Parser
 {
@@ -27,12 +26,12 @@ namespace TextParser.Parser
 			using (StreamReader reader = new StreamReader(path))
 			{
 				string line;
+				IList<Simbol> bufferSimbols = new List<Simbol>();
+				Simbol keySign = new Simbol("");
 				while ((line = reader.ReadLine()) != null)
 				{
 					line = DeleteSequenceSpaces(line);
-					IList<Simbol> bufferSimbols = new List<Simbol>();
-					Simbol keySign = new Simbol("");
-
+					line += "\n";
 					for (int i = 0; i < line.Length; ++i)
 					{
 						Simbol current;
