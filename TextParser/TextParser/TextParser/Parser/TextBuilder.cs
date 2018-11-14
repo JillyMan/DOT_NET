@@ -1,77 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using TextParser.Core;
+using TextParser.Model;
+using TextParser.Model.LetterFactory;
 
 namespace TextParser.Parser
 {
-    public class TextBuilder
-    {
-		private IDictionary<string, Action<Simbol, IList<Simbol>>> _dictionary;
+	public class TextBuilder
+	{
+		private TokenLetter _tokenLetter;
 		private Sentence _sentence;
 		private Text _text;
 
 		public TextBuilder()
 		{
-			_text = new Text();
-			_sentence = new Sentence();
-			_dictionary = new Dictionary<string, Action<Simbol, IList<Simbol>>>();
-
-			Init();
-		}
-
-		private void Init()
-		{
-			_dictionary.Add(".", (sign, list) =>
-			{
-				CreateWordAndSign(sign, list);
-
-				_text.AddSentence(_sentence);
-				_sentence = new Sentence();
-			});
-
-			_dictionary.Add("!", (sign, list) =>
-			{
-				CreateWordAndSign(sign, list);
-
-				_text.AddSentence(_sentence);
-				_sentence = new Sentence();
-			});
-
-			_dictionary.Add("?", (sign, list) =>
-			{
-				CreateWordAndSign(sign, list);
-
-				_text.AddSentence(_sentence);
-				_sentence = new Sentence();
-			});
-
-//-------------
-
-			_dictionary.Add(" ", (sign, list) =>
-			{
-				CreateWordAndSign(sign, list);
-			});
-
-			_dictionary.Add(",", (sign, list) =>
-			{
-				CreateWordAndSign(sign, list);
-			});
-
-			_dictionary.Add(";", (sign, list) =>
-			{
-				CreateWordAndSign(sign, list);
-			});
-
-			_dictionary.Add("-", (sign, list) =>
-			{
-				CreateWordAndSign(sign, list);
-			});
-
-			_dictionary.Add("\n", (sign, list) =>
-			{
-				CreateWordAndSign(sign, list);
-			});
+			_tokenLetter = new TokenLetter();
+			_text = new Text(new List<ISentence>());
+			_sentence = new Sentence(new List<IToken>());
 		}
 
 		public Text GetText()
@@ -79,37 +23,69 @@ namespace TextParser.Parser
 			return _text;
 		}
 
-		private void CreateWordAndSign(Simbol sign, IList<Simbol> list)
+		private void CreateSentences(IToken sign, IToken word)
 		{
-			if(list.Count > 0)
-			{
-				_sentence.AddWord(CreateWord(list));
+			AddWord(word);
+			AddPuncSign(sign);
+			_text.Add(_sentence);
+			_sentence = new Sentence(new List<IToken>());
+		}
+
+		private void CreateGap(IToken gap)
+		{
+			if (gap != null)
+			{ 
+				if (gap.Value != null)
+				{
+					_sentence.Add(new Gap(gap.Value));
+				}
 			}
-			_sentence.AddPunctuationSign(CreatePuncSign(sign));
-
 		}
 
-		private Word CreateWord(IList<Simbol> simbols)
+		private void AddWord(IToken buffer)
 		{
-			return new Word(simbols);
-		}
-
-		private Punctuation CreatePuncSign(Simbol sign)
-		{
-			return new Punctuation(sign);
-		}
-
-		public bool IsKeySign(string sign)
-		{
-			return _dictionary.ContainsKey(sign);
-		}
-
-		//TODO: Change name Action!!
-		public void Action(Simbol s, IList<Simbol> simbols)
-		{
-			if (_dictionary.ContainsKey(s.simbol))
+			if(buffer != null)
 			{
-				_dictionary[s.simbol].Invoke(s, simbols);
+				if (buffer.Value != null)
+				{
+					_sentence.Add(new Word(buffer.Value));
+				}
+			}
+		}
+
+		private void AddPuncSign(IToken sign)
+		{
+			if(sign != null)
+			{
+				if (sign.Value != null)
+				{
+					_sentence.Add(new PunctuationSign(sign.Value));
+				}
+			}
+		}
+			
+		public bool IsKeySign(IToken token)
+		{
+			return _tokenLetter.IsEnd(token) || 
+					_tokenLetter.IsSeparative(token) || 
+					_tokenLetter.IsSpaces(token);
+		}
+
+		public void Action(IToken sign, IToken buffer)
+		{
+			if (_tokenLetter.IsEnd(sign))
+			{
+				CreateSentences(sign, buffer);
+			}
+			else if (_tokenLetter.IsSeparative(sign))
+			{
+				AddWord(buffer);
+				AddPuncSign(sign);
+			}
+			else if(_tokenLetter.IsSpaces(sign))
+			{
+				AddWord(buffer);
+				CreateGap(sign); 
 			}
 		}
 	}

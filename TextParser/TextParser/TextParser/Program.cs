@@ -1,121 +1,94 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
-using TextParser.Core;
+using TextParser.Model;
 using TextParser.Parser;
-using TextParser.Core.Util;
+using TextParser.Model.Util;
+using TextParser.Core;
 
 namespace TextParser
 {
-    class Program
-    {
-
+	class Program
+	{
 		public void Run()
 		{
-			IList<Simbol> hello = new List<Simbol>()
+			IWord[] words = new Word[5]
 			{
-				new Simbol("h"),
-				new Simbol("e"),
-				new Simbol("l"),
-				new Simbol("l"),
-				new Simbol("o")
+				new Word("hello"),
+				new Word("world"),
+				new Word("you"),
+				new Word("pretty"),
+				new Word("cool")
 			};
 
-			IList<Simbol> world = new List<Simbol>()
-			{
-				new Simbol("w"),
-				new Simbol("o"),
-				new Simbol("r"),
-				new Simbol("l"),
-				new Simbol("d")
-			};
+			Gap space = new Gap(" ");
+			Gap space1 = new Gap(" ");
 
-			IList<Simbol> you = new List<Simbol>()
-			{
-				new Simbol("y"),
-				new Simbol("o"),
-				new Simbol("u"),
-			};
+			IGap tab = new Gap("\t");
+			IGap newLine = new Gap("\n");
 
-			IList<Simbol> dirty = new List<Simbol>()
-			{
-				new Simbol("d"),
-				new Simbol("i"),
-				new Simbol("r"),
-				new Simbol("t"),
-				new Simbol("y")
-			};
+			IPunctuationSign comma = new PunctuationSign(", ");
+			IPunctuationSign dash = new PunctuationSign("-");
+			IPunctuationSign dot = new PunctuationSign(".");
+			IPunctuationSign mark = new PunctuationSign("! ");
 
-			IList<Simbol> dog = new List<Simbol>()
-			{
-				new Simbol("d"),
-				new Simbol("o"),
-				new Simbol("g")
-			};
+			ISentence sentence = new Sentence(new List<IToken>());
 
-			Word[] words = new Word[5]
-			{
-				new Word(hello),
-				new Word(world),
-				new Word(you),
-				new Word(dirty),
-				new Word(dog)
-			};
+			sentence.Add(tab);
+			sentence.Add(dash);
+			sentence.Add(words[0]);
+			sentence.Add(space);
+			sentence.Add(words[4]);
+			sentence.Add(dot);
+			sentence.Add(tab);
 
-			Punctuation space = new Punctuation(new Simbol(" "));
-			Punctuation comma = new Punctuation(new Simbol(", "));
-			Punctuation dash = new Punctuation(new Simbol("-"));
-			Punctuation dot = new Punctuation(new Simbol(". "));
-			Punctuation newLine = new Punctuation(new Simbol("\n"));
-			Punctuation mark = new Punctuation(new Simbol("! "));
-			Punctuation tab = new Punctuation(new Simbol("\t"));
-
-			Sentence sentence = new Sentence();
-
-			sentence.AddPunctuationSign(tab);
-			sentence.AddPunctuationSign(dash);
-			sentence.AddWord(words[0]);
-			sentence.AddPunctuationSign(space);
-			sentence.AddWord(words[4]);
-			sentence.AddPunctuationSign(dot);
-			sentence.AddPunctuationSign(tab);
-
-			sentence.AddWord(words[2]);
-			sentence.AddPunctuationSign(space);
-			sentence.AddWord(words[3]);
-			sentence.AddPunctuationSign(mark);
-
+			sentence.Add(words[2]);
+			sentence.Add(space);
+			sentence.Add(words[3]);
+			sentence.Add(mark);
 
 			Console.WriteLine(sentence.ToString());
-			sentence.RemoveWord(words[3]);
-			sentence.RemoveWord(words[4]);
+			sentence.Remove(words[3]);
+			sentence.Remove(words[4]);
 			Console.WriteLine(sentence.ToString());
-
 		}
 
+		/*
+		 * Questions:
+		 * ITocken -
+		 *			Word;
+		 *			Pun
+		 *			Space
+		 * Override gap, punc, token
+		 * After sort may be delete \n? 
+		 */
 		static void Main(string[] args)
         {
-		//	new Program().Run();
+
+	//		new Program().Run();
 			TextParser.Parser.Parser p = new TextParser.Parser.Parser();
-			Text text = p.Parse("file.txt");
+
+			IText text = p.Parse("file.txt");
 
 			Console.WriteLine(text.ToString());
-
 			Console.WriteLine("\n\n");
 
-			//foreach(var s in text.Sentences.SortByWord())
-			//{
-			//	Console.WriteLine(s.ToString());
-			//}
-			//Console.WriteLine("\n\n");
+			/*int i = 0;
+			foreach(var s in text.Sentences.SortByWordCount())
+			{
+				Console.WriteLine(++i + " " + s.ToString() + " ----" + s.Count);
+			}
+			Console.WriteLine("\n\n");*/
+			
 
-
-			/*text.RemoveWordFirstConsonantLetter();
+/*			text.RemoveWordsFirstConsonantLetter(4);
 			Console.WriteLine(text.ToString());
-			*/Console.WriteLine("\n\n");
-
-			text.ChangeWordsInSentence(2, 4, "MOUSE");
+			Console.WriteLine("\n\n");
+*/
+			
+			text.ReplaceWordsInSentence(2, 4, "EASYPEASY");
 			Console.WriteLine(text.ToString());
 			Console.WriteLine("\n\n");
 		}
 	}
-}
+};

@@ -3,55 +3,88 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using TextParser.Core;
+using TextParser.Core.Parser;
+using TextParser.Model;
 
 namespace TextParser.Parser
 {
-	public class Parser
+	public class Parser : IParser
 	{
-		private TextBuilder _factory;
+		private TextBuilder _builder;
 
 		public Parser()
 		{
-			_factory = new TextBuilder();
+			_builder = new TextBuilder();
 		}
 
-		public Text Parse(string path)
+		public IText Parse(string path)
 		{
-			if(!File.Exists(path))
+			if (!File.Exists(path))
 			{
 				throw new FileNotFoundException(path);
 			}
 
-			Text result = new Text();
 			using (StreamReader reader = new StreamReader(path))
 			{
 				string line;
-				IList<Simbol> bufferSimbols = new List<Simbol>();
-				Simbol keySign = new Simbol("");
+				IToken streamToken = new Token();
+
 				while ((line = reader.ReadLine()) != null)
 				{
 					line = DeleteSequenceSpaces(line);
 					line += "\n";
 					for (int i = 0; i < line.Length; ++i)
 					{
-						Simbol current;
-						current.simbol = line[i].ToString();
-
-						if (_factory.IsKeySign(current.simbol))
+						Token current = new Token
 						{
-							keySign.simbol += current.simbol;
-							_factory.Action(keySign, bufferSimbols);
-							bufferSimbols = new List<Simbol>();
-							keySign.simbol = "";
+							Value = line[i].ToString()
+						};
+
+						if (current.Value.Equals("#")) break;
+
+						if (_builder.IsKeySign(current))
+						{
+							IToken keySign = new Token("")
+							{
+								Value = FindKeySign(line, current, ref i)
+							};
+
+							_builder.Action(keySign, streamToken);
+
+							streamToken = new Token();
+
 							continue;
 						}
 
-						bufferSimbols.Add(current);
+						streamToken.Value += current;
 					}
 				}
 			}
+			 
+			return _builder.GetText();
+		}
 
-			return _factory.GetText();
+		private string FindKeySign(string line, IToken current, ref int index)
+		{
+			string result = current.Value;
+			if (index + 1 < line.Length)
+			{
+				string subStr = line.Remove(0, index + 1);
+				foreach (var c in subStr)
+				{
+					current.Value += c;
+					if (_builder.IsKeySign(current))
+					{
+						result += c;
+						++index;
+					}
+					else
+					{
+						break;
+					}
+				}
+			}
+			return result;
 		}
 
 		public static string DeleteSequenceSpaces(string text)
@@ -59,25 +92,18 @@ namespace TextParser.Parser
 			string[] str = text.Split(" ");
 
 			IList<string> list = new List<string>();
-			int count = 0;
+
 			foreach (var s in str)
 			{
-				if (s.Equals(""))
+				if (!s.Equals(""))
 				{
-					if(count == 0)
-					{
-						list.Add(s);
-					}
-					++count;
-				}
-				else
-				{
-					count = 0;
 					list.Add(s);
 				}
 			}
+
 			string result = string.Join(" ", list.ToArray());
 			result = result.Replace("\t", " ");
+			result = result.Replace("\\t", " ");
 			return result;
 		}
 	}
