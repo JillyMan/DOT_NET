@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TextParser.Core;
-
-namespace TextParser.Core.Parser
+﻿namespace TextParser.Core.Parser
 {
-	public interface IParser
+	public interface IParser<Input, Output>
 	{
-		IText Parse(string path);
+		Output Parse (Input path);
 	}
 }

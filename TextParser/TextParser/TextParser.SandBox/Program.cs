@@ -1,10 +1,14 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using TextParser.Model;
-using TextParser.Parser;
 using TextParser.Model.Util;
 using TextParser.Core;
+using TextParser.Parser;
+using TextParser.Concordance;
+using TextParser.Core.Concordance;
+using TextParser.Core.Parser;
+using TextParser.Corcondance.Factory;
+
 
 namespace TextParser
 {
@@ -61,34 +65,47 @@ namespace TextParser
 		 *			Space
 		 * Override gap, punc, token
 		 * After sort may be delete \n? 
+		 * EMPTY LINE!!
 		 */
-		static void Main(string[] args)
+		public static void Main(string[] args)
         {
 
 	//		new Program().Run();
-			TextParser.Parser.Parser p = new TextParser.Parser.Parser();
+			TextParser.Parser.TextParser p = new TextParser.Parser.TextParser();
 
-			IText text = p.Parse("file.txt");
+			IText text = p.Parse("F:\\Dot_Net_Project\\TextParser\\TextParser\\TextParser.SandBox\\file.txt");
+			#region Task1
+			/*
+						Console.WriteLine(text.ToString());
+						Console.WriteLine("\n\n");
 
-			Console.WriteLine(text.ToString());
-			Console.WriteLine("\n\n");
+						int i = 0;
+						foreach(var s in text.Sentences.SortByWordCount())
+						{
+							Console.WriteLine(++i + " " + s.ToString() + " ----" + s.Count);
+						}
+						Console.WriteLine("\n\n");
 
-			/*int i = 0;
-			foreach(var s in text.Sentences.SortByWordCount())
-			{
-				Console.WriteLine(++i + " " + s.ToString() + " ----" + s.Count);
-			}
-			Console.WriteLine("\n\n");*/
-			
 
-/*			text.RemoveWordsFirstConsonantLetter(4);
-			Console.WriteLine(text.ToString());
-			Console.WriteLine("\n\n");
-*/
-			
-			text.ReplaceWordsInSentence(2, 4, "EASYPEASY");
-			Console.WriteLine(text.ToString());
-			Console.WriteLine("\n\n");
+						text.RemoveWordsFirstConsonantLetter(4);
+						Console.WriteLine(text.ToString());
+						Console.WriteLine("\n\n");
+
+
+						text.ReplaceWordsInSentence(2, 4, "EASYPEASY");
+						Console.WriteLine(text.ToString());
+						Console.WriteLine("\n\n");
+			*/
+			#endregion
+
+			Concordance.Concordance concordance = new Concordance.Concordance();
+			PageParser parser = new PageParser(new Factory(78, 2));
+			IPaginatedText paginatedText = parser.Parse(text);
+
+			concordance.WriteToFile(paginatedText, "F:\\Dot_Net_Project\\TextParser\\TextParser\\TextParser.SandBox\\concordance.txt");
+
+			#region Task2
+			#endregion
 		}
 	}
 };

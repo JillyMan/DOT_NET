@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using TextParser.Core;
@@ -8,11 +7,11 @@ using TextParser.Model;
 
 namespace TextParser.Parser
 {
-	public class Parser : IParser
+	public class TextParser : IParser<string, IText>
 	{
 		private TextBuilder _builder;
 
-		public Parser()
+		public TextParser()
 		{
 			_builder = new TextBuilder();
 		}
@@ -89,7 +88,7 @@ namespace TextParser.Parser
 
 		public static string DeleteSequenceSpaces(string text)
 		{
-			string[] str = text.Split(" ");
+			string[] str = text.Split(' ');
 
 			IList<string> list = new List<string>();
 

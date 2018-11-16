@@ -29,7 +29,7 @@ namespace TextParser.Model.Util
 			return set;
 		}
 				
-		public static void Normalize(this Text text)
+		public static void Normalize(this IText text)
 		{
 			foreach (var sentences in text.Sentences)
 			{
