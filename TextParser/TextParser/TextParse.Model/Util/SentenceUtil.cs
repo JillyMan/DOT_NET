@@ -17,7 +17,7 @@ namespace TextParser.Model.Util
 		public static IEnumerable<IWord> QuestionSentenceByWordLength(this IList<ISentence> sentence, int length)
 		{
 			IPunctuationSign sign = new PunctuationSign("?");
-			var questionSentences = sentence.Where(x => x.Last() == sign);
+			var questionSentences = sentence.Where(x => sign.Equals(x.Last()));
 
 			ISet<IWord> set = new HashSet<IWord>();
 

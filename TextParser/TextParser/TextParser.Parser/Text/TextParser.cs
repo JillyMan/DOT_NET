@@ -29,9 +29,9 @@ namespace TextParser.Parser
 				IToken streamToken = new Token();
 
 				while ((line = reader.ReadLine()) != null)
-				{
+				{ 
 					line = DeleteSequenceSpaces(line);
-					line += "\n";
+					line += " ";
 					for (int i = 0; i < line.Length; ++i)
 					{
 						Token current = new Token
@@ -39,13 +39,11 @@ namespace TextParser.Parser
 							Value = line[i].ToString()
 						};
 
-						if (current.Value.Equals("#")) break;
-
 						if (_builder.IsKeySign(current))
 						{
 							IToken keySign = new Token("")
 							{
-								Value = FindKeySign(line, current, ref i)
+								Value = FindWholeSign(line, current, ref i)
 							};
 
 							_builder.Action(keySign, streamToken);
@@ -63,7 +61,7 @@ namespace TextParser.Parser
 			return _builder.GetText();
 		}
 
-		private string FindKeySign(string line, IToken current, ref int index)
+		private string FindWholeSign(string line, IToken current, ref int index)
 		{
 			string result = current.Value;
 			if (index + 1 < line.Length)

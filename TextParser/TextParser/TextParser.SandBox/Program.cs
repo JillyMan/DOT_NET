@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Resources;
+using System.Linq;
 using System.Collections.Generic;
 using TextParser.Model;
 using TextParser.Model.Util;
@@ -8,9 +10,9 @@ using TextParser.Concordance;
 using TextParser.Core.Concordance;
 using TextParser.Core.Parser;
 using TextParser.Corcondance.Factory;
+using TextParser.SandBox.Properties;
 
-
-namespace TextParser
+namespace TextParser.SandBox
 {
 	class Program
 	{
@@ -20,9 +22,9 @@ namespace TextParser
 			{
 				new Word("hello"),
 				new Word("world"),
-				new Word("you"),
-				new Word("pretty"),
-				new Word("cool")
+				new Word("how"),
+				new Word("are"),
+				new Word("you")
 			};
 
 			Gap space = new Gap(" ");
@@ -35,8 +37,12 @@ namespace TextParser
 			IPunctuationSign dash = new PunctuationSign("-");
 			IPunctuationSign dot = new PunctuationSign(".");
 			IPunctuationSign mark = new PunctuationSign("! ");
+			IPunctuationSign q = new PunctuationSign("?");
+			IToken q1 = new PunctuationSign("?");
 
 			ISentence sentence = new Sentence(new List<IToken>());
+
+			var any = sentence.Last();
 
 			sentence.Add(tab);
 			sentence.Add(dash);
@@ -57,55 +63,53 @@ namespace TextParser
 			Console.WriteLine(sentence.ToString());
 		}
 
-		/*
-		 * Questions:
-		 * ITocken -
-		 *			Word;
-		 *			Pun
-		 *			Space
-		 * Override gap, punc, token
-		 * After sort may be delete \n? 
-		 * EMPTY LINE!!
-		 */
 		public static void Main(string[] args)
-        {
+        {			
+			Parser.TextParser p = new Parser.TextParser();
 
-	//		new Program().Run();
-			TextParser.Parser.TextParser p = new TextParser.Parser.TextParser();
-
-			IText text = p.Parse("F:\\Dot_Net_Project\\TextParser\\TextParser\\TextParser.SandBox\\file.txt");
-			#region Task1
+			IText text = p.Parse(Resources.FileWithText);
+			Console.WriteLine(text);
+			#region Task1		
 			/*
-						Console.WriteLine(text.ToString());
-						Console.WriteLine("\n\n");
+				Console.WriteLine("\n\n");
 
-						int i = 0;
-						foreach(var s in text.Sentences.SortByWordCount())
-						{
-							Console.WriteLine(++i + " " + s.ToString() + " ----" + s.Count);
-						}
-						Console.WriteLine("\n\n");
+				int i = 0;
+				foreach(var s in text.Sentences.SortByWordCount())
+				{
+					Console.WriteLine(++i + ") " + s.ToString() + " ----" + s.Count);
+				}
+				Console.WriteLine("\n\n");
 
+				Console.WriteLine("Question sentence ");
 
-						text.RemoveWordsFirstConsonantLetter(4);
-						Console.WriteLine(text.ToString());
-						Console.WriteLine("\n\n");
+				i = 0;
+				foreach (var s in text.Sentences.QuestionSentenceByWordLength(4))
+				{
+					Console.WriteLine(++i + ") " + s.ToString() + " ----" + s.Length);
+				}
+				Console.WriteLine("\n\n");
 
+				text.RemoveWordsFirstConsonantLetter(4);
+				Console.WriteLine(text.ToString());
+				Console.WriteLine("\n\n");
 
-						text.ReplaceWordsInSentence(2, 4, "EASYPEASY");
-						Console.WriteLine(text.ToString());
-						Console.WriteLine("\n\n");
+				text.ReplaceWordsInSentence(2, 4, "EASYPEASY");
+				Console.WriteLine(text.ToString());
+				Console.WriteLine("\n\n");
 			*/
 			#endregion
 
+			Console.WriteLine("----------------------------------------------------");
+			#region Task2
 			Concordance.Concordance concordance = new Concordance.Concordance();
-			PageParser parser = new PageParser(new Factory(78, 2));
+			PageParser parser = new PageParser(new PaginatedTextHelper(25, 3));
 			IPaginatedText paginatedText = parser.Parse(text);
 
-			concordance.WriteToFile(paginatedText, "F:\\Dot_Net_Project\\TextParser\\TextParser\\TextParser.SandBox\\concordance.txt");
+			Console.WriteLine(paginatedText);
 
-			#region Task2
-			#endregion
+			concordance.WriteToFile(paginatedText, Resources.Concordance);
+
+			#endregion			
 		}
 	}
-};
+}

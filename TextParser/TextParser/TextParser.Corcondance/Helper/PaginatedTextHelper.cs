@@ -1,17 +1,16 @@
-﻿using System.Collections.Generic;
-using TextParser.Concordance;
-using TextParser.Core;
+﻿using TextParser.Concordance;
 using TextParser.Core.Concordance;
+using TextParser.Core.Concordance.Hepler;
 
 namespace TextParser.Corcondance.Factory
 {
-	public class Factory : Core.Concordance.Factory.IFactory
+	public class PaginatedTextHelper : IConcordanceHelper
 	{
 		public int LengthLine { get; }
 		public int SizePage { get; }
 		private int counterPage = 0;
 
-		public Factory(int lengthLine, int sizePage)
+		public PaginatedTextHelper(int lengthLine, int sizePage)
 		{
 			LengthLine = lengthLine;
 			SizePage = sizePage;
@@ -19,17 +18,17 @@ namespace TextParser.Corcondance.Factory
 
 		public ILine GetLine()
 		{			
-			return new Line(LengthLine, new List<IToken>());
+			return new Line(LengthLine);
 		}
 
 		public IPage GetPage()
 		{
-			return new Page(++counterPage, SizePage, new List<ILine>());
+			return new Page(++counterPage, SizePage);
 		}
 
 		public IPaginatedText GetPaginatedText()
 		{
-			return new PaginatedText(new List<IPage>());
+			return new PaginatedText();
 		}
 	}
 }

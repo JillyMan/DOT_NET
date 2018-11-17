@@ -1,56 +1,77 @@
-﻿using TextParser.Core;
+﻿using System;
+using TextParser.Core;
 using TextParser.Core.Concordance;
+using TextParser.Core.Concordance.Hepler;
 using TextParser.Core.Parser;
 
 namespace TextParser.Parser
 {
 	public class PageParser : IParser<IText, IPaginatedText>
 	{
-		Core.Concordance.Factory.IFactory _factory;
+		private IConcordanceHelper _helper;
 
-		public PageParser(Core.Concordance.Factory.IFactory factory)
+		private IPage _currentPage;
+		private ILine _currentLine;
+		private IPaginatedText _paginatedText;
+
+		public PageParser(IConcordanceHelper helper)
 		{
-			_factory = factory;
+			_helper = helper;
+			_paginatedText = _helper.GetPaginatedText();
+			_currentPage = _helper.GetPage();
+			_currentLine = _helper.GetLine();
 		}
 
-		//TODO: What If token very long?;
 		public IPaginatedText Parse(IText text)
 		{
-			IPaginatedText paginatedText = _factory.GetPaginatedText();
-			IPage currentPage = _factory.GetPage();
-			ILine currentLine = _factory.GetLine();
-
 			foreach (ISentence sentence in text.Sentences)
 			{
 				foreach (IToken token in sentence)
 				{
-//					if(|| token.Value.Equals("\n"))
-					if (!currentLine.Add(token))
+					if(token.Length > _currentLine.MaxLength)
 					{
-						if (!currentPage.Add(currentLine))
-						{
-							paginatedText.Add(currentPage);
-							currentPage = _factory.GetPage();
-
-						}
-
-						currentPage.Add(currentLine);
-						currentLine = _factory.GetLine();
-						currentLine.Add(token);
+						throw new System.Exception("Token ->" + token + " very long!!");
 					}
+
+					AddInLine(token);
 				}
 			}
-
-			if (!currentPage.Add(currentLine))
+		
+			if(_currentLine.Counter > 0)
 			{
-				paginatedText.Add(currentPage);
-				currentPage = _factory.GetPage();
-				currentPage.Add(currentLine);
-			}
-			paginatedText.Add(currentPage);
+				AddInPage();
+				_paginatedText.Add(_currentPage);
+			} 
+			else if(_currentPage.Lines.Count > 0)
+			{
+				_paginatedText.Add(_currentPage);
+				_currentPage = _helper.GetPage();
+				_currentPage.Add(_currentLine);
 
-			return paginatedText;
+				_paginatedText.Add(_currentPage);
+			}
+
+			return _paginatedText;
 		}
 
+		private void AddInPage()
+		{
+			if (!_currentPage.Add(_currentLine))
+			{
+				_paginatedText.Add(_currentPage);
+				_currentPage = _helper.GetPage();
+				_currentPage.Add(_currentLine);
+			}
+		}
+
+		private void AddInLine(IToken token)
+		{
+			if (!_currentLine.Add(token) || token.Value.Equals("\n"))
+			{
+				AddInPage();
+				_currentLine = _helper.GetLine();
+				_currentLine.Add(token);
+			}
+		}
 	}
 }

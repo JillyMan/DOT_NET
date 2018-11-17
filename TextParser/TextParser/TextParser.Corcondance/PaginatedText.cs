@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using TextParser.Core.Concordance;
 
 namespace TextParser.Concordance
@@ -9,9 +7,9 @@ namespace TextParser.Concordance
 	{
 		public IList<IPage> Pages { get; }
 
-		public PaginatedText(IList<IPage> pages)
+		public PaginatedText()
 		{
-			Pages = pages;
+			Pages = new List<IPage>();
 		}
 		
 		public void Add(IPage page)
@@ -21,5 +19,17 @@ namespace TextParser.Concordance
 				Pages.Add(page);
 			}
 		}
+		public override string ToString()
+		{
+			string result = "";
+
+			foreach(var page in Pages)
+			{
+				result += page.ToString();
+			}
+	
+			return result;
+		}
+
 	}
 }

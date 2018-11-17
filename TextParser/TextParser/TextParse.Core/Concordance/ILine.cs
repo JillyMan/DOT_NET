@@ -6,7 +6,7 @@ namespace TextParser.Core.Concordance
 	{
 		int Counter { get; }
 		int MaxLength { get; }
-		IList<IToken> Tokens { get; }
 		bool Add(IToken token);
+		IList<IToken> Tokens { get; }
 	}
 }

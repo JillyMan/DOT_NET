@@ -7,6 +7,14 @@ namespace TextParser.Model
 	{
 		public string Value { get; set; }
 
+		public int Length
+		{
+			get
+			{
+				return Value.Length;
+			}
+		}
+
 		public Gap(string str)
 		{
 			Value = str;
@@ -18,6 +26,7 @@ namespace TextParser.Model
 			{
 				return false;
 			}
+
 			return p1.Value.Equals(p2.Value);
 		}
 

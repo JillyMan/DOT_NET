@@ -6,7 +6,7 @@ namespace TextParser.Core.Concordance
 	{
 		int Number { get; }
 		int Size { get; }
-		IList<ILine> Lines { get; }
 		bool Add(ILine line);
+		IList<ILine> Lines { get; }
 	}
 }

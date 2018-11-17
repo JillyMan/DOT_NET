@@ -7,7 +7,7 @@ namespace TextParser.Model
 {
 	public class Sentence : ISentence
 	{
-		public IList<IToken> Tokens { get; }
+		public IList<IToken> Tokens { get; private set; }
 
 		public int Count
 		{
@@ -42,9 +42,8 @@ namespace TextParser.Model
 		{
 			if(token != null)
 			{
-				bool result = false;
-				result = Tokens.Remove(token);
-//				while () ;
+				bool result = Tokens.Remove(token);
+				while (Tokens.Remove(token)) ;
 				return result;
 			}
 			return false;
@@ -90,17 +89,6 @@ namespace TextParser.Model
 				if (gap is IGap)
 				{
 					yield return (IGap)gap;
-				}
-			}
-		}
-
-		public IEnumerable<IPunctuationSign> GetPunctuation()
-		{
-			foreach (var punct in Tokens)
-			{
-				if (punct is IPunctuationSign)
-				{
-					yield return (IPunctuationSign)punct;
 				}
 			}
 		}

@@ -7,11 +7,19 @@ namespace TextParser.Model
     {
 		public string Value { get ; set; }
 
+		public int Length
+		{
+			get
+			{
+				return Value.Length;
+			}
+		}
+
 		public PunctuationSign (string sign)
 		{
 			Value = sign;
 		}
-
+		
 		public static bool operator == (PunctuationSign p1, PunctuationSign p2)
 		{
 			if (p1 is null || p2 is null)

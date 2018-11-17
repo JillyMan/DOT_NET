@@ -16,14 +16,14 @@ namespace TextParser.Concordance
 
 		public void WriteToFile(IPaginatedText paginatedText, string path)
 		{
-			if(!File.Exists(path))
+			if (!File.Exists(path))
 			{
 				throw new FileNotFoundException($"{path} not found!!");
 			}
 
-			using(StreamWriter writer = new StreamWriter(path))
+			using (StreamWriter writer = new StreamWriter(path))
 			{
-				foreach(var record in BreakUpPaginatedText(paginatedText))
+				foreach (var record in BreakUpPaginatedText(paginatedText))
 				{
 					writer.WriteLine(record.Key);
 					foreach (var word in record)
@@ -41,15 +41,15 @@ namespace TextParser.Concordance
 		{
 			var words = (from page in text.Pages
 						   from line in page.Lines
-								from token in line.Tokens
-								   where token is IWord
-									   select new
-										{
-											Word = token.Value,
-											NumberPage = page.Number
+						 		from token in line.Tokens
+						 		   where token is IWord
+						 			   select new
+						 				{
+						 					Word = token.Value.ToLower(),
+						 					NumberPage = page.Number
 										}).ToList();
 
-			IDictionary<string, PositionInfo> dictionary = new Dictionary<string, PositionInfo>();
+			var dictionary = new Dictionary<string, PositionInfo>();
 			foreach (var w in words)
 			{
 				if(!dictionary.ContainsKey(w.Word))
@@ -61,22 +61,18 @@ namespace TextParser.Concordance
 				}
 				else
 				{
-					PositionInfo info = dictionary[w.Word];
+					var info = dictionary[w.Word];
 					info.count++;
 					info.numberPages.Add(w.NumberPage);
 					dictionary[w.Word] = info;
 				}
 			}
 
-			var groups = from d in dictionary
-						group d by d.Key.First();
+			var groups = from w in dictionary
+						 orderby w.Key
+						 group w by char.ToUpper(w.Key.First());
 
-			var sorted = from g in groups
-						 orderby char.ToLower(g.Key)
-						 select g;
-					
-
-			foreach(IGrouping<char, KeyValuePair<string, PositionInfo>> group in sorted)
+			foreach(var group in groups)
 			{
 				yield return group;
 			}

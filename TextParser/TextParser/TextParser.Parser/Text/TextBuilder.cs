@@ -67,7 +67,7 @@ namespace TextParser.Parser
 		public bool IsKeySign(IToken token)
 		{
 			return _tokenLetter.IsEnd(token) || 
-					_tokenLetter.IsSeparative(token) || 
+					_tokenLetter.IsSeparator(token) || 
 					_tokenLetter.IsSpaces(token);
 		}
 
@@ -77,7 +77,7 @@ namespace TextParser.Parser
 			{
 				CreateSentences(sign, buffer);
 			}
-			else if (_tokenLetter.IsSeparative(sign))
+			else if (_tokenLetter.IsSeparator(sign))
 			{
 				AddWord(buffer);
 				AddPuncSign(sign);

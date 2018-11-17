@@ -5,11 +5,8 @@ namespace TextParser.Model.LetterFactory
 {
 	public class TokenLetter : ILetterFactory<IToken>, ISignFactory<IToken>
 	{
-		private LetterFactory _letterFactory = LetterFactory.Instance;
-		private SignFactory _signFactory = SignFactory.Instance;
-
-		public TokenLetter()
-		{}
+		private LetterFactory _letterFactory = new LetterFactory();
+		private SignFactory _signFactory = new SignFactory();
 
 		public bool IsQuestion(IToken token)
 		{
@@ -46,9 +43,9 @@ namespace TextParser.Model.LetterFactory
 			return _signFactory.IsSpaces(token.Value);
 		}
 
-		public bool IsSeparative(IToken token)
+		public bool IsSeparator(IToken token)
 		{
-			return _signFactory.IsSeparative(token.Value);
+			return _signFactory.IsSeparator(token.Value);
 		}
 	}
 }

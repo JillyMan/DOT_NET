@@ -9,31 +9,6 @@ namespace TextParser.Model.LetterFactory
 		private static ISet<string> _spacesSymbol;
 		private static ISet<string> _separativeSymbol;
 
-		private static SignFactory _instance = null;
-		private static object _syncObject = new object();
-
-		public static SignFactory Instance
-		{
-			get
-			{
-				if(_instance == null)
-				{
-					lock(_syncObject)
-					{
-						if(_instance == null)
-						{
-							_instance = new SignFactory();
-						}
-					}
-				}
-				return _instance;
-			}
-		}
-
-		private SignFactory()
-		{
-		}
-
 		static SignFactory()
 		{
 			_endSentence = new HashSet<string>();
@@ -46,8 +21,11 @@ namespace TextParser.Model.LetterFactory
 		private static void Init()
 		{
 			_endSentence.Add(".");
+			_endSentence.Add(". ");
 			_endSentence.Add("..");
+			_endSentence.Add(".. ");
 			_endSentence.Add("...");
+			_endSentence.Add("... ");
 			_endSentence.Add("?");
 			_endSentence.Add("!");
 			_endSentence.Add("!?");
@@ -56,8 +34,7 @@ namespace TextParser.Model.LetterFactory
 
 			_spacesSymbol.Add(" ");
 			_spacesSymbol.Add("\n");
-			_spacesSymbol.Add("\t");
-
+			_spacesSymbol.Add("\n ");
 
 			_separativeSymbol.Add("//");
 			_separativeSymbol.Add("/*");
@@ -82,7 +59,7 @@ namespace TextParser.Model.LetterFactory
 			return sign.Equals("?");
 		}
 
-		public bool IsSeparative(string sign)
+		public bool IsSeparator(string sign)
 		{
 			return _separativeSymbol.Contains(sign);
 		}

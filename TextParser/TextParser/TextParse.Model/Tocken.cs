@@ -6,6 +6,14 @@ namespace TextParser.Model
 	{
 		public string Value { get; set; }
 
+		public int Length
+		{
+			get
+			{
+				return Value.Length;
+			}
+		}
+		
 		public Token(string str)
 		{
 			Value = str;

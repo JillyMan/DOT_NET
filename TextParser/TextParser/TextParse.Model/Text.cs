@@ -60,7 +60,6 @@ namespace TextParser.Model
 			return false;
 		}
 
-		//TODO: Check bound of List
 		public void CopyTo(ISentence[] array, int arrayIndex)
 		{
 			if(array != null && array.Length > 0)

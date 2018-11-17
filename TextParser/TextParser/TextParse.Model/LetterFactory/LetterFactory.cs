@@ -7,32 +7,6 @@ namespace TextParser.Model.LetterFactory
 	{
 		private static IDictionary<char, TypeLetter> _letters;
 
-
-		private static LetterFactory _instance = null;
-		private static object lockObj = new object();
-
-		public static LetterFactory Instance
-		{
-			get
-			{
-				if(_instance == null)
-				{
-					lock (lockObj)
-					{
-						if(_instance == null)
-						{
-							_instance = new LetterFactory();
-						}
-					}
-				}
-				return _instance;
-			}
-		}
-
-		private LetterFactory()
-		{
-		}
-
 		static LetterFactory()
 		{
 			_letters = new Dictionary<char, TypeLetter>();

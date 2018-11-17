@@ -1,6 +1,6 @@
-﻿namespace TextParser.Core.Concordance.Factory
+﻿namespace TextParser.Core.Concordance.Hepler
 {
-	public interface IFactory
+	public interface IConcordanceHelper
 	{
 		ILine GetLine();
 		IPage GetPage();

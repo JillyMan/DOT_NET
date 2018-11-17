@@ -10,10 +10,10 @@ namespace TextParser.Concordance
 		public int MaxLength { get; }
 		public IList<IToken> Tokens { get; }
 
-		public Line(int maxLength, IList<IToken> tokens)
+		public Line(int maxLength)
 		{
 			Counter = 0;
-			Tokens = tokens;
+			Tokens = new List<IToken>();
 			MaxLength = maxLength;
 		}
 
@@ -31,6 +31,18 @@ namespace TextParser.Concordance
 				}
 
 			}
+			return result;
+		}
+
+		public override string ToString()
+		{
+			string result = "";
+
+			foreach (var token in Tokens)
+			{
+				result += token.ToString();
+			}
+			result += "\n";
 			return result;
 		}
 	}

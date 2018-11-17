@@ -4,7 +4,7 @@
 	{
 		bool IsEnd(T sign);
 		bool IsSpaces(T sign);
-		bool IsSeparative(T sign);
+		bool IsSeparator(T sign);
 		bool IsQuestion(T sign);
 	}
 }
