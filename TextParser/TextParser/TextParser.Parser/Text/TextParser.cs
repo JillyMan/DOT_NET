@@ -34,6 +34,8 @@ namespace TextParser.Parser
 					line += " ";
 					for (int i = 0; i < line.Length; ++i)
 					{
+						if (line[i].Equals('#')) break;
+
 						Token current = new Token
 						{
 							Value = line[i].ToString()
@@ -57,7 +59,7 @@ namespace TextParser.Parser
 					}
 				}
 			}
-			 
+
 			return _builder.GetText();
 		}
 

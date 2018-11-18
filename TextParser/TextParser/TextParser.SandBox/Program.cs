@@ -71,13 +71,13 @@ namespace TextParser.SandBox
 			IText text = p.Parse(Resources.FileWithText);
 			Console.WriteLine(text);
 			#region Task1		
-			/*
+			
 				Console.WriteLine("\n\n");
 
 				int i = 0;
 				foreach(var s in text.Sentences.SortByWordCount())
 				{
-					Console.WriteLine(++i + ") " + s.ToString() + " ----" + s.Count);
+					Console.WriteLine(++i + ") " + s.ToString() + " ----" + s.GetWords().Count());
 				}
 				Console.WriteLine("\n\n");
 
@@ -94,10 +94,10 @@ namespace TextParser.SandBox
 				Console.WriteLine(text.ToString());
 				Console.WriteLine("\n\n");
 
-				text.ReplaceWordsInSentence(2, 4, "EASYPEASY");
+				text.ReplaceWordsInSentence(2, 5, "EASYPEASY");
 				Console.WriteLine(text.ToString());
 				Console.WriteLine("\n\n");
-			*/
+			
 			#endregion
 
 			Console.WriteLine("----------------------------------------------------");

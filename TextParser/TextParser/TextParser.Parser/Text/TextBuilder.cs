@@ -20,6 +20,11 @@ namespace TextParser.Parser
 
 		public Text GetText()
 		{
+			if(_sentence.Count > 0)
+			{
+				throw new System.Exception("Text is Invalid. The offer is not finished!!!");
+			}
+
 			return _text;
 		}
 

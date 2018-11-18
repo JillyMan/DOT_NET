@@ -29,7 +29,9 @@ namespace TextParser.Model.LetterFactory
 			_endSentence.Add("...");
 			_endSentence.Add("... ");
 			_endSentence.Add("?");
+			_endSentence.Add("? ");
 			_endSentence.Add("!");
+			_endSentence.Add("! ");
 			_endSentence.Add("!?");
 			_endSentence.Add("?!");
 			_endSentence.Add(";");
