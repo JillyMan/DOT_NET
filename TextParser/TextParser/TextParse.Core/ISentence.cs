@@ -6,6 +6,5 @@ namespace TextParser.Core
 	{
 		IList<IToken> Tokens { get; }
 		IEnumerable<IWord> GetWords();
-		IEnumerable<IGap> GetGaps();
 	}
 }

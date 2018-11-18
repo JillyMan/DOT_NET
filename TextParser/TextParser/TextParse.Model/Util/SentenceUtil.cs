@@ -28,26 +28,5 @@ namespace TextParser.Model.Util
 			}
 			return set;
 		}
-				
-		public static void Normalize(this IText text)
-		{
-			foreach (var sentences in text.Sentences)
-			{
-				var gaps = sentences.GetGaps();
-
-				foreach (IToken gap in gaps)
-				{
-					if (gap.Equals("\t"))
-					{
-						gap.Value = " ";
-					}
-
-					if (!gap.Equals('\n'))
-					{
-						gap.Value = " ";
-					}
-				}
-			}
-		}
 	}
 }

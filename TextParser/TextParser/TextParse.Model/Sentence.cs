@@ -82,17 +82,6 @@ namespace TextParser.Model
 			}
 		}
 
-		public IEnumerable<IGap> GetGaps()
-		{
-			foreach (var gap in Tokens)
-			{
-				if (gap is IGap)
-				{
-					yield return (IGap)gap;
-				}
-			}
-		}
-
 		public IEnumerator<IToken> GetEnumerator()
 		{
 			return Tokens.GetEnumerator();
