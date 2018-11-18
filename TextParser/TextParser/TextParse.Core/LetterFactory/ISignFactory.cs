@@ -6,5 +6,6 @@
 		bool IsSpaces(T sign);
 		bool IsSeparator(T sign);
 		bool IsQuestion(T sign);
+		bool IsNewLine(T sign);
 	}
 }

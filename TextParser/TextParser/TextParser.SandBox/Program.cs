@@ -11,6 +11,7 @@ using TextParser.Core.Concordance;
 using TextParser.Core.Parser;
 using TextParser.Corcondance.Factory;
 using TextParser.SandBox.Properties;
+using TextParser.Model.LetterFactory;
 
 namespace TextParser.SandBox
 {
@@ -102,7 +103,7 @@ namespace TextParser.SandBox
 			Console.WriteLine("----------------------------------------------------");
 			#region Task2
 			Concordance.Concordance concordance = new Concordance.Concordance();
-			PageParser parser = new PageParser(new PaginatedTextHelper(25, 3));
+			PageParser parser = new PageParser(new PaginatedTextHelper(25, 3), new TokenLetter());
 			IPaginatedText paginatedText = parser.Parse(text);
 
 			Console.WriteLine(paginatedText);

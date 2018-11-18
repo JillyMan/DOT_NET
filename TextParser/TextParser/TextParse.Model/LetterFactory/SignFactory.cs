@@ -8,12 +8,14 @@ namespace TextParser.Model.LetterFactory
 		private static ISet<string> _endSentence;
 		private static ISet<string> _spacesSymbol;
 		private static ISet<string> _separativeSymbol;
+		private static ISet<string> _newLineSymbol;
 
 		static SignFactory()
 		{
 			_endSentence = new HashSet<string>();
 			_spacesSymbol = new HashSet<string>();
 			_separativeSymbol = new HashSet<string>();
+			_newLineSymbol = new HashSet<string>();
 
 			Init();
 		}
@@ -33,8 +35,8 @@ namespace TextParser.Model.LetterFactory
 			_endSentence.Add(";");
 
 			_spacesSymbol.Add(" ");
-			_spacesSymbol.Add("\n");
-			_spacesSymbol.Add("\n ");
+
+			_newLineSymbol.Add("\n");
 
 			_separativeSymbol.Add("//");
 			_separativeSymbol.Add("/*");
@@ -54,6 +56,11 @@ namespace TextParser.Model.LetterFactory
 			return _endSentence.Contains(sign);
 		}
 
+		public bool IsNewLine(string sign)
+		{
+			return _newLineSymbol.Contains(sign);
+		}
+
 		public bool IsQuestion(string sign)
 		{
 			return sign.Equals("?");
@@ -63,6 +70,7 @@ namespace TextParser.Model.LetterFactory
 		{
 			return _separativeSymbol.Contains(sign);
 		}
+
 
 		public bool IsSpaces(string sign)
 		{
