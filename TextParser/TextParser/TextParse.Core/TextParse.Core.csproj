@@ -40,7 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Concordance\Helper\IConcordanceHelper.cs" />
+    <Compile Include="Concordance\Helper\Paginator.cs" />
     <Compile Include="Concordance\ILine.cs" />
     <Compile Include="Concordance\IPage.cs" />
     <Compile Include="Concordance\IPaginatedText.cs" />

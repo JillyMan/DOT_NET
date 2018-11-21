@@ -9,14 +9,14 @@ namespace TextParser.Parser
 {
 	public class PageParser : IParser<IText, IPaginatedText>
 	{
-		private IConcordanceHelper _helper;
+		private IPaginator _helper;
 		private ISignFactory<IToken> _signFactory; 
 
 		private IPage _currentPage;
 		private ILine _currentLine;
 		private IPaginatedText _paginatedText;
 
-		public PageParser(IConcordanceHelper helper, ISignFactory<IToken> signFactory)
+		public PageParser(IPaginator helper, ISignFactory<IToken> signFactory)
 		{
 			_helper = helper;
 			_signFactory = signFactory;

@@ -48,10 +48,10 @@ namespace TextParser.Model.LetterFactory
 		{
 			return _letters[char.ToLower(letter)];
 		}
-
+		
 		public bool IsLetter(char letter)
 		{
-			return _letters.ContainsKey(letter);
+			return _letters.ContainsKey(char.ToLower(letter));
 		}
 	}
 }

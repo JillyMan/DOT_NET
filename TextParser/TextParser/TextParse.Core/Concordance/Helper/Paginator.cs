@@ -1,6 +1,6 @@
 ﻿namespace TextParser.Core.Concordance.Hepler
 {
-	public interface IConcordanceHelper
+	public interface IPaginator
 	{
 		ILine GetLine();
 		IPage GetPage();

@@ -9,7 +9,7 @@ using TextParser.Parser;
 using TextParser.Concordance;
 using TextParser.Core.Concordance;
 using TextParser.Core.Parser;
-using TextParser.Corcondance.Factory;
+using TextParser.Corcondance.Paginator;
 using TextParser.SandBox.Properties;
 using TextParser.Model.LetterFactory;
 
@@ -103,7 +103,7 @@ namespace TextParser.SandBox
 			Console.WriteLine("----------------------------------------------------");
 			#region Task2
 			Concordance.Concordance concordance = new Concordance.Concordance();
-			PageParser parser = new PageParser(new PaginatedTextHelper(25, 3), new TokenLetter());
+			PageParser parser = new PageParser(new Paginator(25, 3), new TokenLetter());
 			IPaginatedText paginatedText = parser.Parse(text);
 
 			Console.WriteLine(paginatedText);

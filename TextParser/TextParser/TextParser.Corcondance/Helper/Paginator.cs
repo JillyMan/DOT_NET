@@ -2,15 +2,15 @@
 using TextParser.Core.Concordance;
 using TextParser.Core.Concordance.Hepler;
 
-namespace TextParser.Corcondance.Factory
+namespace TextParser.Corcondance.Paginator
 {
-	public class PaginatedTextHelper : IConcordanceHelper
+	public class Paginator : IPaginator
 	{
 		public int LengthLine { get; }
 		public int SizePage { get; }
 		private int counterPage = 0;
 
-		public PaginatedTextHelper(int lengthLine, int sizePage)
+		public Paginator(int lengthLine, int sizePage)
 		{
 			LengthLine = lengthLine;
 			SizePage = sizePage;

@@ -41,7 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Concordance.cs" />
-    <Compile Include="Helper\PaginatedTextHelper.cs" />
+    <Compile Include="Helper\Paginator.cs" />
     <Compile Include="Line.cs" />
     <Compile Include="Page.cs" />
     <Compile Include="PaginatedText.cs" />

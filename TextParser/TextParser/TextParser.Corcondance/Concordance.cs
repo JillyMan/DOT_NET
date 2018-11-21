@@ -48,7 +48,7 @@ namespace TextParser.Concordance
 						 					Word = token.Value.ToLower(),
 						 					NumberPage = page.Number
 										}).ToList();
-
+			//wordPAges
 			var dictionary = new Dictionary<string, PositionInfo>();
 			foreach (var w in words)
 			{
