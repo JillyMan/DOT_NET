@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ATC
+namespace Core.ATC
 {
-	class Program
+	public enum PortStatus
 	{
-		static void Main(string[] args)
-		{
-			Console.WriteLine("Init task 3");
-		}
+		Online,
+		Offline,
+		Busy
 	}
 }
