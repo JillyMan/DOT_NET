@@ -1,22 +1,18 @@
 ﻿using System;
-using Core;
 using Core.ATC;
 
 namespace Model
 {
 	public class Terminal : ITerminal
 	{
-		public IPort Port { get; private set; }
-		public IClient Abonent { get; }
-		public string Number { get; }
+		public int Number { get; }
 
-		public Terminal(string number, IClient abonent)
+		public Terminal(int number)
 		{
 			Number = number;
-			Abonent = abonent;
 		}
 
-		public event Action<string> CallAction;
+		public event Action<int> CallAction;
 		public event Action RejectAction;
 		public event Action AnswerAction;
 
@@ -39,14 +35,11 @@ namespace Model
 			}
 		}
 
-		public void Call(string number)
+		public void Call(int number)
 		{
-			if (!string.IsNullOrEmpty(number))
+			if(CallAction != null)
 			{
-				if(CallAction != null)
-				{
-					CallAction(number);
-				}
+				CallAction(number);
 			}
 		}
 
@@ -65,5 +58,6 @@ namespace Model
 				RejectAction();
 			}
 		}
+
 	}
 }

@@ -6,22 +6,13 @@ using System.Threading.Tasks;
 
 namespace Core.ATC
 {
-	public interface IPort
+	public interface IPort<T> where T : ITerminal
 	{
 		int Number { get; }
 		PortStatus Status { get; set; }
 
-		event Action<ITerminal, string> CallAction;
-		event Action<ITerminal> RejectAction;
-		event Action<ITerminal> AnswerAction;
-		event Action<ITerminal> AttachTerminal;
-		event Action<ITerminal> UnhookTerminal;
-
-		void Call(ITerminal terminal, string number);
-		void Answer(ITerminal terminal);
-		void Reject(ITerminal terminal);
-
-		void Attach(ITerminal terminal);
-		void Unhook(ITerminal terminal);
+		void Call(T terminal, int number);
+		void Answer(T terminal);
+		void Reject(T terminal);
 	}
 }

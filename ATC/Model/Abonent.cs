@@ -18,10 +18,27 @@ namespace Model
 			LastName = lastName;
 		}
 
+		public override bool Equals(object obj)
+		{
+			if (obj is Abonent a)
+			{
+				return FirstName.Equals(a.FirstName) &&
+					LastName.Equals(a.LastName);
+			}
+			return false;
+		}
+
 		public override string ToString()
 		{
 			return FirstName + " " + LastName;
 		}
 
+		public override int GetHashCode()
+		{
+			var hashCode = -1531887941;
+			hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(FirstName);
+			hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(LastName);
+			return hashCode;
+		}
 	}
 }

@@ -41,11 +41,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abonent.cs" />
-    <Compile Include="ATC\Helpers\BinderPortStation.cs" />
-    <Compile Include="ATC\Helpers\BinderPortTerminal.cs" />
+    <Compile Include="ATC\Operator.cs" />
     <Compile Include="ATC\Port.cs" />
     <Compile Include="ATC\Station.cs" />
     <Compile Include="ATC\Terminal.cs" />
+    <Compile Include="BillingSystem\Billing.cs" />
+    <Compile Include="BillingSystem\ExtensionBilling.cs" />
+    <Compile Include="BillingSystem\Report\Call.cs" />
+    <Compile Include="BillingSystem\Report\OutgoingСall.cs" />
+    <Compile Include="BillingSystem\Report\ReportByCall.cs" />
+    <Compile Include="BillingSystem\TariffPlan\BusinessTarifPlan.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

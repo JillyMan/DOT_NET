@@ -1,55 +1,60 @@
-﻿using Core;
-using Core.ATC;
+﻿using System;
 using Model;
 using Model.ATC;
-using Model.ATC.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Model.BillingSystem;
+using Model.BillingSystem.TariffPlan;
 
 namespace Sandbox
 {
 	class Program
 	{
+		//Terminal in operator hard code??
 		static void Main(string[] args)
 		{
+			Billing billing = new Billing(new BusinessTarifPlan());
+			Operator @operator = new Operator();
+			Station station = new Station(3);
 
-			Port port0 = new Port(1);
-			Port port1 = new Port(2);
-			Port port2 = new Port(3);
+			@operator.RegisterInBilling += billing.RegisterUser;
+			@operator.AddTerminal += station.AddTerminal;
+			station.CallCompleted += billing.EndOfCall;
+			station.GetAbonentByNumber += @operator.GetAbonentByNumber;
 
-			Station station = new Station();
-			BinderPortStation binderPortStation = new BinderPortStation();
-			binderPortStation.Bind(station);
-			binderPortStation.Bind(station, port0);
-			binderPortStation.Bind(station, port1);
-			binderPortStation.Bind(station, port2);
+			Abonent a1 = new Abonent("Mike", "Jordan");
+			Abonent a2 = new Abonent("Bill", "Jonson");
+			Abonent a3 = new Abonent("Mike", "Vazowski");
 
-			IClient client0 = new Abonent("Smith", "John");
-			IClient client1 = new Abonent("Bob", "Miles");
-			IClient client2 = new Abonent("Jimmy", "Neytron");
+			Terminal t1 = @operator.RegisterAbonent(a1, 1200);
+			Terminal t2 = @operator.RegisterAbonent(a2, 1300);
+			Terminal t3 = @operator.RegisterAbonent(a3, 200);
 
-			Terminal terminal0 = new Terminal("11-11", client0);
-			Terminal terminal1 = new Terminal("22-22", client1);
-			Terminal terminal2 = new Terminal("33-33", client2);
+			t1.Call(t2.Number);
+			t2.Answer();
+			t2.Reject();
 
-			port0.Status = PortStatus.Online;
-			port0.Attach(terminal0);
-			port0.Attach(terminal1);
+			t1.Call(t3.Number);
+			t3.Answer();
+			t1.Reject();
 
-			port1.Attach(terminal0);
-			port1.Attach(terminal2);
+			t2.Call(t3.Number);
+			t3.Answer();
+			t3.Reject();
 
-			terminal0.Call("22-22");
-			terminal0.Call("33-33");
+			var reports = billing.GetReports(a1);
+			Console.WriteLine(a1 + " : ");
+			Console.WriteLine("Ballance: " + billing.GetBallance(a1));
+			foreach (var r in reports)
+			{
+				Console.WriteLine(r);
+			}
 
-			terminal1.Answer();
-			terminal2.Answer();
-
-			terminal0.Reject();
-			terminal0.Reject();
+			var reports2 = billing.GetReports(a2);
+			Console.WriteLine(a2 + " : ");
+			Console.WriteLine("Ballance: " + billing.GetBallance(a2));
+			foreach (var r in reports2)
+			{
+				Console.WriteLine(r);
+			}
 		}
 	}
 }

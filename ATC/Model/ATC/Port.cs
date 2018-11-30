@@ -1,77 +1,70 @@
 ﻿using Core.ATC;
-using Model.ATC.Helpers;
 using System;
 
 namespace Model.ATC
 {
-	public class Port : IPort
+	public class Port : IPort<Terminal>
 	{
-		private BinderPortTerminal binder;
-
 		public int Number { get; }
 		public PortStatus Status { get; set; }
 
-		public event Action<ITerminal, string> CallAction;
-		public event Action<ITerminal> RejectAction;
-		public event Action<ITerminal> AnswerAction;
-		public event Action<ITerminal> AttachTerminal;
-		public event Action<ITerminal> UnhookTerminal;
+		public event Action<Terminal, int> CallAction;
+		public event Action<Terminal> RejectAction;
+		public event Action<Terminal> AnswerAction;
+
+		public event Action<Terminal> AttachTerminalAction;
+		public event Action<Terminal> UnhookTerminalAction;
+
+		public void AttachTerminal(Terminal terminal)
+		{
+			if(AttachTerminalAction != null)
+			{
+				AttachTerminalAction(terminal);
+			}
+		}
+
+		public void UnhookTerminaln(Terminal terminal)
+		{
+			if(UnhookTerminalAction != null)
+			{
+				UnhookTerminalAction(terminal);
+			}
+		}
 
 		public Port(int number)
 		{
 			Number = number;
 			Status = PortStatus.Offline;
-			binder = new BinderPortTerminal();
 		}
 
-		public void Attach(ITerminal terminal)
+		//add check int null;
+		public void Call(Terminal terminal, int number)
 		{
-			if (terminal != null)
+			if(terminal == null)
 			{
-				if(AttachTerminal != null)
-				{
-					binder.Bind(terminal, this);
-					AttachTerminal(terminal);		
-				}
+				throw new ArgumentNullException("Terminal is null");
+			}
+
+			if(Status == PortStatus.Online && 
+				CallAction != null)
+			{
+				CallAction(terminal, number);
 			}
 		}
 
-		public void Unhook(ITerminal terminal)
+		public void Answer(Terminal terminal)
 		{
-			if (terminal != null)
-			{
-				if(UnhookTerminal != null)
-				{
-					binder.UnBind(terminal, this);
-					UnhookTerminal(terminal);
-				}
-			}
-		}
-
-		public void Call(ITerminal terminal, string number)
-		{
-			if(Status == PortStatus.Online)
-			{
-				if(CallAction != null)
-				{
-					CallAction(terminal, number);
-				}
-			}
-		}
-
-		public void Answer(ITerminal terminal)
-		{
-			Status = PortStatus.Busy;
-			if(AnswerAction != null)
+			if (Status == PortStatus.Online && 
+				AnswerAction != null)
 			{
 				AnswerAction(terminal);
 			}
 		}	
 
-		public void Reject(ITerminal terminal)
+		public void Reject(Terminal terminal)
 		{
-			Status = PortStatus.Online;
-			if(RejectAction != null)
+			if(Status == PortStatus.Busy && 
+				RejectAction != null)
 			{
 				RejectAction(terminal);
 			}

@@ -3,15 +3,13 @@ using System.Collections.Generic;
 
 namespace Core.ATC
 {
-	public interface IStation
+	public interface IStation<T> where T : ITerminal
 	{
-		event Action<ITerminal, ITerminal> CallCompleted;
+		void Call(T terminal, int number);
+		void Answer(T terminal);
+		void Reject(T terminal);
 
-		void Call(ITerminal terminal, string number);
-		void Answer(ITerminal terminal);
-		void Reject(ITerminal terminal);
-
-		void AddTerminal(ITerminal terminal);
-		void RemoveTerminal(ITerminal terminal);
+		void AddTerminal(T terminal);
+		void RemoveTerminal(T terminal);
 	}
 }

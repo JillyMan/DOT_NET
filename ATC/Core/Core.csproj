@@ -44,7 +44,7 @@
     <Compile Include="ATC\IStation.cs" />
     <Compile Include="ATC\ITerminal.cs" />
     <Compile Include="ATC\PortStatus.cs" />
-    <Compile Include="Billing\TariffPlan.cs" />
+    <Compile Include="Billing\ITariffPlan.cs" />
     <Compile Include="IClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
