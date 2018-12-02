@@ -19,15 +19,7 @@ namespace Model.BillingSystem
 			}
 		}
 
-		private ISet<AbonentInfo> _abonents;
-
-		public ISet<AbonentInfo> Abonents
-		{
-			get
-			{
-				return _abonents;
-			}
-		}
+		public ISet<AbonentInfo> Abonents { get; }
 
 		public IList<OutgoingСall> outgoingСalls;
 	
@@ -37,7 +29,7 @@ namespace Model.BillingSystem
 		{
 			TariffPlan = tariffPlan;
 			outgoingСalls = new List<OutgoingСall>();
-			_abonents = new HashSet<AbonentInfo>();
+			Abonents = new HashSet<AbonentInfo>();
 		}
 
 		public void RegisterUser(Abonent a, int startBallance)
@@ -46,7 +38,7 @@ namespace Model.BillingSystem
 			{
 				throw new ArgumentException("Abonent null, startBallnce < 0");
 			}
-			_abonents.Add(new AbonentInfo(a, startBallance));
+			Abonents.Add(new AbonentInfo(a, startBallance));
 		}
 
 		private void WriteOffMoney(Abonent abonent, int cost)
@@ -56,7 +48,7 @@ namespace Model.BillingSystem
 				throw new ArgumentNullException("Abonent is null, cost < 0");
 			}
 
-			var a = _abonents.FirstOrDefault(x => x.Abonent.Equals(abonent));
+			var a = Abonents.FirstOrDefault(x => x.Abonent.Equals(abonent));
 			a.Ballance -= cost;
 		}
 
