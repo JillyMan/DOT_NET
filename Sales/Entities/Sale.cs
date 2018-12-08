@@ -2,7 +2,7 @@
 
 namespace Entities
 {
-	public class Sales
+	public class Sale
 	{
 		public int Id { get; set; }
 		public DateTime Date { get; set; }
@@ -10,9 +10,9 @@ namespace Entities
 		public Product Product { get; set; }
 		public int Summa { get; set; }
 
-		public Sales() { }
+		public Sale() { }
 
-		public Sales(int id, DateTime date, Client client, Product product, int summa)
+		public Sale(int id, DateTime date, Client client, Product product, int summa)
 		{
 			Id = id;
 			Date = date;

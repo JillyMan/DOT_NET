@@ -6,12 +6,12 @@ namespace Entities
 	{
 		//TODO: Get connection name from .config
 		public SalesDbContext() : 
-			base("DBConnection")
+			base("DBSales")
 		{
 		}
 
-		DbSet<Client> Clients { get; set; }
-		DbSet<Product> Product { get; set; }
-		DbSet<Sales> Sales { get; set; }
+		public DbSet<Client> Clients { get; set; }
+		public DbSet<Product> Products { get; set; }
+		public DbSet<Sale> Sales { get; set; }
 	}
 }
