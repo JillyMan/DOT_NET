@@ -10,6 +10,8 @@ namespace Entities
 		public Product Product { get; set; }
 		public int Summa { get; set; }
 
+		public Sales() { }
+
 		public Sales(int id, DateTime date, Client client, Product product, int summa)
 		{
 			Id = id;
