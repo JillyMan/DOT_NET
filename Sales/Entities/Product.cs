@@ -12,5 +12,10 @@
 			Id = id;
 			Name = name;
 		}
+
+		public override string ToString()
+		{
+			return $"Product[ ID={Id}, Name={Name} ]";
+		}
 	}
 }

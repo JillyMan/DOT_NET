@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace SandBox
+namespace SandBox.Test
 {
 	public class TestEntityLib
 	{

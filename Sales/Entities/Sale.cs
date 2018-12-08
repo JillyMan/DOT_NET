@@ -20,5 +20,10 @@ namespace Entities
 			Product = product;
 			Summa = summa;
 		}
+
+		public override string ToString()
+		{
+			return $"Sale [ ID={Id}, Date={Date}, {Client}, {Product}, Cost={Summa} ]";
+		}
 	}
 }
