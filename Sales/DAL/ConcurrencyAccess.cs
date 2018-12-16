@@ -24,6 +24,11 @@ namespace DAL
 
 		public Entity TryGet(Expression<Func<Entity, bool>> searchCriteria)
 		{
+			if (searchCriteria == null)
+			{
+				return null;
+			}
+
 			_locker.EnterReadLock();
 
 			Entity entity = null;

@@ -1,13 +1,20 @@
 ﻿using DAL.Abstractions;
+using System.Data.Entity;
 using System.Threading;
 
 namespace DAL.Factory
 {
 	public class ConcurrencyAccessFactory : IConcurrencyAccessFactory
 	{
-		public IСompetitiveAccess<Entity> GetInstance<Entity>(IGenericRepository<Entity> rep, ReaderWriterLockSlim lockSlim) where Entity : class
+		private IRepositoryFactory _factory;
+		public ConcurrencyAccessFactory(IRepositoryFactory factory)
 		{
-			return new ConcurrencyAccess<Entity>(rep, lockSlim);
+			_factory = factory;
+		}
+
+		public IСompetitiveAccess<Entity> GetInstance<Entity>(DbContext context, ReaderWriterLockSlim lockSlim) where Entity : class
+		{
+			return new ConcurrencyAccess<Entity>(_factory.GetRepository<Entity>(context), lockSlim);
 		}
 	}
 }

@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Data.Entity;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace DAL.Abstractions
 {
 	public interface IConcurrencyAccessFactory
 	{
-		IСompetitiveAccess<Entity> GetInstance<Entity>(IGenericRepository<Entity> rep, ReaderWriterLockSlim lockSlim) where Entity : class;
+		IСompetitiveAccess<Entity> GetInstance<Entity>(DbContext context, ReaderWriterLockSlim lockSlim) where Entity : class;
 	}
 }
