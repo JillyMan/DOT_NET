@@ -48,8 +48,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstractions\IRepositoryFactory.cs" />
+    <Compile Include="Factory\RepositoryFactory.cs" />
     <Compile Include="GenericRepository.cs" />
-    <Compile Include="IGenericRepository.cs" />
+    <Compile Include="Abstractions\IGenericRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

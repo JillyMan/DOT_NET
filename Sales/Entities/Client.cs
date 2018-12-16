@@ -8,12 +8,6 @@
 		public Client()
 		{}
 
-		public Client(int id, string name)
-		{
-			Id = id;
-			Name = name;
-		}
-
 		public override string ToString()
 		{
 			return $"Client [ ID={Id}, Name={Name} ]";

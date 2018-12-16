@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DAL.Abstractions;
+using System;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
@@ -10,15 +11,14 @@ namespace DAL
 	{
 		private DbContext context;
 		private DbSet<T> container;
-		private bool disposed = false;
-
+	
 		public GenericRepository(DbContext context)
 		{
 			this.context = context;
 			this.container = context.Set<T>();
 		}
 
-		public void Insert(T item)
+		public virtual void Insert(T item)
 		{
 			if(item == null)
 			{
@@ -27,7 +27,7 @@ namespace DAL
 			container.Add(item);
 		}
 
-		public void Delete(object id)
+		public virtual void Delete(object id)
 		{
 			if (id == null)
 			{
@@ -37,7 +37,7 @@ namespace DAL
 			container.Remove(entiy);
 		}
 
-		public void Delete(T item)
+		public virtual void Delete(T item)
 		{
 			if (item == null)
 			{
@@ -50,7 +50,7 @@ namespace DAL
 			container.Remove(item);
 		}
 
-		public IQueryable<T> Get(Expression<Func<T, bool>> filter = null)
+		public virtual IQueryable<T> Get(Expression<Func<T, bool>> filter = null)
 		{
 			IQueryable<T> query = container;
 			if(filter != null)
@@ -60,7 +60,7 @@ namespace DAL
 			return query;
 		}
 
-		public T GetById(object id)
+		public virtual T GetById(object id)
 		{
 			if (id == null)
 			{
@@ -75,7 +75,7 @@ namespace DAL
 			context.SaveChanges();
 		}
 
-		public void Update(T item)
+		public virtual void Update(T item)
 		{
 			if(item == null)
 			{
@@ -84,29 +84,6 @@ namespace DAL
 
 			container.Attach(item);
 			context.Entry(item).State = EntityState.Modified;
-		}
-
-		public virtual void Dispose(bool disposing)
-		{
-			if (!this.disposed)
-			{
-				if (disposing)
-				{
-					context.Dispose();
-				}
-			}
-			this.disposed = true;
-		}
-
-		public void Dispose()
-		{
-			Dispose(true);
-			GC.SuppressFinalize(this);
-		}
-
-		~GenericRepository()
-		{
-			Dispose();
 		}
 	}
 }

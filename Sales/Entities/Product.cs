@@ -7,12 +7,6 @@
 
 		public Product() { }
 
-		public Product(int id, string name)
-		{
-			Id = id;
-			Name = name;
-		}
-
 		public override string ToString()
 		{
 			return $"Product[ ID={Id}, Name={Name} ]";
