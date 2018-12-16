@@ -15,16 +15,14 @@ namespace DAL
 	{
 		private IGenericRepository<Entity> _repository;
 		private ReaderWriterLockSlim _locker;
-		private bool disposed;
 
 		public ConcurrencyAccess(IGenericRepository<Entity> repository, ReaderWriterLockSlim locker)
 		{
 			_repository = repository;
 			_locker = locker;
-			disposed = false;
 		}
 
-		public Entity TryGet(Expression<Func<Entity, bool>> filter)
+		public Entity TryGet(Expression<Func<Entity, bool>> searchCriteria)
 		{
 			_locker.EnterReadLock();
 
@@ -32,7 +30,7 @@ namespace DAL
 
 			try
 			{
-				entity = _repository.Get(filter).FirstOrDefault();
+				entity = _repository.Get(searchCriteria).FirstOrDefault();
 			}
 			finally
 			{
@@ -42,17 +40,14 @@ namespace DAL
 			return entity;
 		}
 
-		public void TryLoad(Entity entity, Expression<Func<Entity, bool>> expression)
+		public void Load(Entity entity)
 		{
 			_locker.EnterWriteLock();
 
 			try
 			{
-				if (TryGet(expression) == null)
-				{
-					_repository.Insert(entity);
-					_repository.Save();
-				}
+				_repository.Insert(entity);
+				_repository.Save();
 			}
 			finally
 			{
