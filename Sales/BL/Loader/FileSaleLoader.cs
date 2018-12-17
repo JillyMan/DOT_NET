@@ -3,7 +3,9 @@ using Entities;
 using Entities.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;
+using System.Globalization;
 using System.IO;
 using System.Linq.Expressions;
 using System.Threading;
@@ -31,12 +33,14 @@ namespace BL.Loader
 			base(dbContextFactory, cancellationToken)
 		{
 			_concurrencyFactory = concurrencyFactory;
-			_lockers = new Dictionary<Type, ReaderWriterLockSlim>();
+			InitLockers();
 		}
 
 		private void InitLockers()
 		{
 			_lockers = new Dictionary<Type, ReaderWriterLockSlim>();
+
+			_lockers.Add(typeof(SourceDataSale), new ReaderWriterLockSlim());
 			_lockers.Add(typeof(Client), new ReaderWriterLockSlim());
 			_lockers.Add(typeof(Manager), new ReaderWriterLockSlim());
 			_lockers.Add(typeof(Product), new ReaderWriterLockSlim());
@@ -56,7 +60,9 @@ namespace BL.Loader
 
 			return new FormatLine
 			{
-				Date = Convert.ToDateTime(tokens[0]),
+				Date = DateTime.ParseExact(tokens[0], 
+								ConfigurationManager.AppSettings["DatePatterSale"], 
+								CultureInfo.InvariantCulture),
 				Client = new Client { Name = tokens[1] },
 				Product = new Product { Name = tokens[2] },
 				Summa = int.Parse(tokens[3])
@@ -65,8 +71,8 @@ namespace BL.Loader
 
 		protected override void LoadData(DbContext context, FormatLine data)
 		{
-			data.Client = LoadEntity(data.Client, x => x.Name.Equals(data.Client.Name), context);
-			data.Product = LoadEntity(data.Product, x => x.Name.Equals(data.Product.Name), context);
+			data.Client = LoadEntity(data.Client, context, x => x.Name.Equals(data.Client.Name));
+			data.Product = LoadEntity(data.Product, context, x => x.Name.Equals(data.Product.Name));
 
 			Sale sale = new Sale
 			{
@@ -77,10 +83,10 @@ namespace BL.Loader
 				SourceData = _headerFile
 			};
 
-			LoadEntity(sale, null, context);
+			LoadEntity(sale, context);
 		}
 
-		private Entity LoadEntity<Entity>(Entity entity, Expression<Func<Entity, bool>> searchExpression, DbContext context) where Entity : class
+		private Entity LoadEntity<Entity>(Entity entity, DbContext context, Expression<Func<Entity, bool>> searchExpression = null) where Entity : class
 		{
 			var loader = _concurrencyFactory.GetInstance<Entity>(context, _lockers[typeof(Entity)]);
 			var saveEntity = loader.TryGet(searchExpression);
@@ -107,14 +113,15 @@ namespace BL.Loader
 			{
 				throw new ArgumentException("Invalid file name need \'ManagerName_DDMMYYYY\'");
 			}
-
+		 
 			_headerFile = new SourceDataSale
 			{
 				Manager = new Manager { Name = parts[0] },
-				DateCreateFile = Convert.ToDateTime(parts[1])
+				DateCreateFile = DateTime.ParseExact(parts[1], ConfigurationManager.AppSettings["DatePatterHeader"], CultureInfo.InvariantCulture)
 			};
 
-			_headerFile.Manager = LoadEntity(_headerFile.Manager, x => x.Name.Equals(_headerFile.Manager.Name), context);
+			_headerFile.Manager = LoadEntity(_headerFile.Manager, context, x => x.Name.Equals(_headerFile.Manager.Name));
+			LoadEntity(_headerFile, context);
 		}
 	}
 }

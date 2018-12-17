@@ -1,4 +1,5 @@
-﻿using Entities.Abstractions;
+﻿#define DEBUG_MODE
+using Entities.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -35,42 +36,37 @@ namespace BL.Loader
 
 			return Task<bool>.Factory.StartNew(() =>
 			{
-				Console.WriteLine(Thread.CurrentThread.Name + "  Wait 10000ms");
-				Thread.Sleep(10000);
-				Console.WriteLine(Thread.CurrentThread.Name + " Begin work");
-
+#if DEBUG_MODE
+				Logger.Logger.Log(" Begin load : " + filePath);
+#endif
 				using (var context = _factoryContext.GetContext())
 				{
 					using(var transaction = context.Database.BeginTransaction())
 					{
 						try
 						{
+							Logger.Logger.Log("Begin read");
 							LoadHeader(context, filePath);
 							foreach (var line in GetLine(filePath))
 							{
 								FormatLine formatLine = ParseLine(line);
-								LoadData(context, formatLine);
-								
-								try
-								{
-									_cancellationToken.ThrowIfCancellationRequested();
-								}
-								catch (OperationCanceledException cancelException)
-								{
-									Console.WriteLine("Processing: " + filePath + " interupted from CancelationToken: \n" + cancelException.Message);
-									return false;
-								}
+								Logger.Logger.Log("\tread line");
+								LoadData(context, formatLine);								
+								_cancellationToken.ThrowIfCancellationRequested();								
 							}
 							transaction.Commit();
 						}
 						catch (Exception e)
 						{
 							transaction.Rollback();
-							Console.WriteLine(e.Message);
-							return false;
+							//Console.WriteLine("---------ROLLBACK!!");
+							Logger.Logger.Log("Processing: " + filePath + " interupted from ", this.GetType(), e);
+							throw e;
 						}
 					}
 				}
+
+				Logger.Logger.Log(" Load successfully");
 				return true;
 			});
 		}

@@ -1,28 +1,38 @@
-﻿#define CONSOLE_APP
+﻿#define DEBUG_MODE
 using BL.Loader;
 using System;
+using System.Configuration;
 using System.IO;
 using System.Threading;
 
 namespace BL
 {
+	//Dispose and stop
 	public class DispatcherFolder : IDisposable
     {
 		private FileSystemWatcher _watcher;
 		private FileSaleLoader _loader;
 		private CancellationTokenSource _source;
 
-		private bool disposed = false;
+		private bool disposed;
 
 		private string _sourceFolder;
-		private string _procesingFolder;
+		private string _processingFolder;
 		private string _processedFolder;
+		private string _invalidFileFolder;
 
-		public DispatcherFolder(string sourceFolder, string processingFolder, string processedFolder)
+		public DispatcherFolder()
 		{
-			_sourceFolder = sourceFolder;
-			_procesingFolder = processingFolder;
-			_processedFolder = processedFolder;
+			_sourceFolder = ConfigurationManager.AppSettings["SourceFolder"];
+			_processingFolder = ConfigurationManager.AppSettings["ProcessingFolder"];
+			_processedFolder = ConfigurationManager.AppSettings["ProcessedForlder"];
+			_invalidFileFolder = ConfigurationManager.AppSettings["IvalidFileFolder"];
+		}
+
+		private void Init()
+		{
+			disposed = false;
+			Logger.Logger.OtherLog += OtherLog;
 
 			_source = new CancellationTokenSource();
 			_loader = new FileSaleLoader(
@@ -30,54 +40,57 @@ namespace BL
 				new DAL.Factory.ConcurrencyAccessFactory(new DAL.Factory.RepositoryFactory()),
 				_source.Token);
 
-			InitWatcher();
-		}
-
-		private void InitWatcher()
-		{
 			_watcher = new FileSystemWatcher(_sourceFolder)
 			{
 				NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
-								| NotifyFilters.FileName | NotifyFilters.DirectoryName,
+					| NotifyFilters.FileName | NotifyFilters.DirectoryName,
 				Filter = "*.csv"
 			};
-			_watcher.Created += OnCreatedAsync;
+			_watcher.Created += OnCreated;
+			_watcher.EnableRaisingEvents = true;
 		}
 
 		public void Start()
 		{
-			_watcher.EnableRaisingEvents = true;
+			Logger.Logger.Log("Star dispatcher");
+			Init();
 		}
 
 		public void Stop()
 		{
-			_source.Cancel();
-			_watcher.EnableRaisingEvents = false;
+			Logger.Logger.Log("Stop dispatcher");
+			Dispose(true);
 		}
 
-		private void OnCreatedAsync(object source, FileSystemEventArgs eventArgs)
+		private void OtherLog(string log)
+		{
+			Console.WriteLine(log);
+		}
+
+		private void OnCreated(object source, FileSystemEventArgs eventArgs)
 		{
 			try
 			{
-#if CONSOLE_APP
-				Console.WriteLine("Created file: " + eventArgs.FullPath + " " + eventArgs.ChangeType);
-#endif
-				string processingPath = _procesingFolder + "\\" + eventArgs.Name;
+				Logger.Logger.Log("Create file: " + eventArgs.FullPath);
+				string processingPath = _processingFolder + "\\" + eventArgs.Name;
 				string processedPath = _processedFolder + "\\" + eventArgs.Name;
 				
+				Logger.Logger.Log("Move to: " + processingPath);
 				File.Move(eventArgs.FullPath, processingPath);
-#if CONSOLE_APP
-				Console.WriteLine("Move file: " + eventArgs.FullPath);
-#endif
-				_loader.LoadFile(processedPath);
-				File.Move(processingPath, processedPath);
-#if CONSOLE_APP
-				Console.WriteLine("Move file: " + eventArgs.FullPath);
-#endif
+
+				_loader.LoadFile(processingPath).ContinueWith((result) =>
+				{
+					if (result.Result)
+					{
+						Logger.Logger.Log("Move to: " + processedPath);
+						File.Move(processingPath, processedPath);
+					}
+				});
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine(e.StackTrace);
+				Logger.Logger.Log("", typeof(DispatcherFolder), e);
+				throw e;
 			}
 		}
 
@@ -88,8 +101,14 @@ namespace BL
 				if (dispose)
 				{
 					disposed = true;
-					_watcher.Created -= OnCreatedAsync;
+
+					_watcher.EnableRaisingEvents = false;
+					_watcher.Created -= OnCreated;
+					_watcher.Dispose();
+
+					_source.Cancel();
 					_source.Dispose();
+
 				}
 			}
 		}
