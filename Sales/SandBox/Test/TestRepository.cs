@@ -4,7 +4,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Runtime.InteropServices;
 
 namespace SandBox.Test
 {
@@ -23,26 +22,26 @@ namespace SandBox.Test
 		private void TestClient(Entities.SalesDbContext dbContext)
 		{
 			Console.WriteLine("\tStart test client repository");
-			using (var repClient = new DAL.GenericRepository<Entities.Client>(dbContext))
-			{
-				var client = new Entities.Client { Name = $"TestReposClient {dbContext.Clients.Count()}" };
-				TestInsert(repClient, client);
-				TestGet(repClient);
-				client.Name = $"Updated name client with id={client.Id}";
-				TestUpdate(repClient, client);
-				TestGet(repClient);
-				TestDelete(repClient, client);
-				TestGet(repClient);
+			var repClient = new DAL.GenericRepository<Entities.Client>(dbContext);
+		
+			var client = new Entities.Client { Name = $"TestReposClient {dbContext.Clients.Count()}" };
+			TestInsert(repClient, client);
+			TestGet(repClient);
+			client.Name = $"Updated name client with id={client.Id}";
+			TestUpdate(repClient, client);
+			TestGet(repClient);
+			TestDelete(repClient, client);
+			TestGet(repClient);
 
-				//TestDeleteById(repClient);
+			//TestDeleteById(repClient);
 
-				TestGet(repClient);
-				TestGetById(repClient);
-			}
+			TestGet(repClient);
+			TestGetById(repClient);
+			
 			Console.WriteLine("\t Finish test client repository");
 		}
 
-		private void TestGetById<T>(DAL.IGenericRepository<T> rep)
+		private void TestGetById<T>(DAL.Abstractions.IGenericRepository<T> rep)
 		{
 			ChangeColor();
 			int rand = random.Next(rep.Get().Count()) + 1;
@@ -51,7 +50,7 @@ namespace SandBox.Test
 			Console.WriteLine(rep.GetById(rand));
 		}
 
-		private void TestInsert<T>(DAL.IGenericRepository<T> rep, T entity)
+		private void TestInsert<T>(DAL.Abstractions.IGenericRepository<T> rep, T entity)
 		{
 			ChangeColor();
 			Console.WriteLine($"Insert {entity}");
@@ -60,7 +59,7 @@ namespace SandBox.Test
 			rep.Save();
 		}
 
-		private void TestDelete<T>(DAL.IGenericRepository<T> rep, T entity)
+		private void TestDelete<T>(DAL.Abstractions.IGenericRepository<T> rep, T entity)
 		{
 			ChangeColor();
 			Console.WriteLine($"Delete {entity}");
@@ -70,7 +69,7 @@ namespace SandBox.Test
 		}
 
 		[Obsolete("Method can try remove row which in reletion to other row in other table")]
-		private void TestDeleteById<T>(DAL.IGenericRepository<T> rep)
+		private void TestDeleteById<T>(DAL.Abstractions.IGenericRepository<T> rep)
 		{
 			ChangeColor();
 			int rand = random.Next(rep.Get().Count()) + 1;
@@ -81,7 +80,7 @@ namespace SandBox.Test
 			ReturnColor();
 		}
 
-		private void TestGet<T>(DAL.IGenericRepository<T> rep)
+		private void TestGet<T>(DAL.Abstractions.IGenericRepository<T> rep)
 		{
 			ChangeColor();
 			Console.WriteLine("Get all elements");
@@ -93,7 +92,7 @@ namespace SandBox.Test
 			}
 		}
 
-		private void TestUpdate<T>(DAL.IGenericRepository<T> rep, T entity)
+		private void TestUpdate<T>(DAL.Abstractions.IGenericRepository<T> rep, T entity)
 		{
 			ChangeColor();
 			Console.WriteLine($"Update entity {entity}");
