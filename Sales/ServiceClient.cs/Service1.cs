@@ -20,13 +20,21 @@ namespace ServiceClient
 
 		protected override void OnStart(string[] args)
 		{
+			BL.Logger.Logger.Log("Start service....");
 			dispatcher = new BL.DispatcherFolder();
 			dispatcher.Start();
 		}
 
+		protected override void OnShutdown()
+		{
+			BL.Logger.Logger.Log("On shutdown....");
+			OnStop();
+		}
+
 		protected override void OnStop()
 		{
-			if(dispatcher != null)
+			BL.Logger.Logger.Log("Stop service....");
+			if (dispatcher != null)
 			{
 				dispatcher.Stop();
 			}
