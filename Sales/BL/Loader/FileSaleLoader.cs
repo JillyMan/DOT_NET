@@ -22,7 +22,6 @@ namespace BL.Loader
 
 	public class FileSaleLoader : AbstractLoadFile<SourceDataSale, FormatLine>
 	{
-		private SourceDataSale _headerFile;
 		private IConcurrencyAccessFactory _concurrencyFactory;
 		private IDictionary<Type, ReaderWriterLockSlim> _lockers;
 
@@ -69,7 +68,7 @@ namespace BL.Loader
 			};
 		}
 
-		protected override void LoadData(DbContext context, FormatLine data)
+		protected override void LoadData(DbContext context, SourceDataSale sourceData, FormatLine data)
 		{
 			data.Client = LoadEntity(data.Client, context, x => x.Name.Equals(data.Client.Name));
 			data.Product = LoadEntity(data.Product, context, x => x.Name.Equals(data.Product.Name));
@@ -80,7 +79,7 @@ namespace BL.Loader
 				Date = data.Date,
 				Product = data.Product,
 				Summa = data.Summa,
-				SourceData = _headerFile
+				SourceData = sourceData
 			};
 
 			LoadEntity(sale, context);
@@ -93,14 +92,14 @@ namespace BL.Loader
 
 			if(saveEntity == null)
 			{
-				loader.Load(entity);
+				loader.Load(entity, searchExpression);
 				saveEntity = entity;
 			}
 
 			return saveEntity;			
 		}
 
-		protected override void LoadHeader(DbContext context, string fileName)
+		protected override SourceDataSale LoadHeader(DbContext context, string fileName)
 		{
 			if (!File.Exists(fileName))
 			{
@@ -113,15 +112,16 @@ namespace BL.Loader
 			{
 				throw new ArgumentException("Invalid file name need \'ManagerName_DDMMYYYY\'");
 			}
-		 
-			_headerFile = new SourceDataSale
+
+			SourceDataSale header = new SourceDataSale
 			{
 				Manager = new Manager { Name = parts[0] },
 				DateCreateFile = DateTime.ParseExact(parts[1], ConfigurationManager.AppSettings["DatePatterHeader"], CultureInfo.InvariantCulture)
 			};
 
-			_headerFile.Manager = LoadEntity(_headerFile.Manager, context, x => x.Name.Equals(_headerFile.Manager.Name));
-			LoadEntity(_headerFile, context);
+			header.Manager = LoadEntity(header.Manager, context, x => x.Name.Equals(header.Manager.Name));
+			LoadEntity(header, context);
+			return header;
 		}
 	}
 }

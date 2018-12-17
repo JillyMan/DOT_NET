@@ -36,22 +36,21 @@ namespace BL.Loader
 
 			return Task<bool>.Factory.StartNew(() =>
 			{
-#if DEBUG_MODE
 				Logger.Logger.Log(" Begin load : " + filePath);
-#endif
 				using (var context = _factoryContext.GetContext())
 				{
-					using(var transaction = context.Database.BeginTransaction())
+//					context.Configuration.AutoDetectChangesEnabled = false;
+					using (var transaction = context.Database.BeginTransaction())
 					{
 						try
 						{
 							Logger.Logger.Log("Begin read");
-							LoadHeader(context, filePath);
+							FormatHeader header = LoadHeader(context, filePath);
 							foreach (var line in GetLine(filePath))
 							{
 								FormatLine formatLine = ParseLine(line);
 								Logger.Logger.Log("\tread line");
-								LoadData(context, formatLine);								
+								LoadData(context, header, formatLine);								
 								_cancellationToken.ThrowIfCancellationRequested();								
 							}
 							transaction.Commit();
@@ -59,7 +58,7 @@ namespace BL.Loader
 						catch (Exception e)
 						{
 							transaction.Rollback();
-							//Console.WriteLine("---------ROLLBACK!!");
+							Logger.Logger.Log("---------ROLLBACK!!");
 							Logger.Logger.Log("Processing: " + filePath + " interupted from ", this.GetType(), e);
 							throw e;
 						}
@@ -88,8 +87,8 @@ namespace BL.Loader
 			}
 		}
 
-		protected abstract void LoadData(DbContext context, FormatLine line);
+		protected abstract void LoadData(DbContext context, FormatHeader header, FormatLine line);
 		protected abstract FormatLine ParseLine(string[] line);
-		protected abstract void LoadHeader(DbContext contxt, string fileName);
+		protected abstract FormatHeader LoadHeader(DbContext contxt, string fileName);
 	}
 }

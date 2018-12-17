@@ -22,14 +22,17 @@ namespace DAL
 			_locker = locker;
 		}
 
-		public Entity TryGet(Expression<Func<Entity, bool>> searchCriteria)
+		public Entity TryGet(Expression<Func<Entity, bool>> searchCriteria, bool safeMode = false)
 		{
 			if (searchCriteria == null)
 			{
 				return null;
 			}
 
-			_locker.EnterReadLock();
+			if (safeMode)
+			{
+				_locker.EnterReadLock();
+			}
 
 			Entity entity = null;
 
@@ -39,20 +42,26 @@ namespace DAL
 			}
 			finally
 			{
-				_locker.ExitReadLock();
+				if (safeMode)
+				{
+					_locker.ExitReadLock();
+				}
 			}
 
 			return entity;
 		}
 
-		public void Load(Entity entity)
+		public void Load(Entity entity, Expression<Func<Entity, bool>> searchExpression)
 		{
 			_locker.EnterWriteLock();
 
 			try
 			{
-				_repository.Insert(entity);
-				_repository.Save();
+				if(TryGet(searchExpression) == null)
+				{
+					_repository.Insert(entity);
+					_repository.Save();
+				}
 			}
 			finally
 			{
