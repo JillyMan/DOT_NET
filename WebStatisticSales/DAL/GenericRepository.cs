@@ -53,13 +53,21 @@ namespace DAL
 			container.Remove(item);
 		}
 
-		public virtual IQueryable<T> Get(Expression<Func<T, bool>> filter = null)
+		public virtual IQueryable<T> Get(
+			Expression<Func<T, bool>> filter = null, 
+			string includeProperties = "")
 		{
 			IQueryable<T> query = container;
 			if(filter != null)
 			{
 				query = query.Where(filter);
 			}
+
+			foreach(var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+			{
+				query = query.Include(includeProperty);
+			}
+
 			return query;
 		}
 

@@ -11,7 +11,7 @@ namespace DAL.Models
 
 		public DbSet<Client> Clients { get; set; }
 		public DbSet<Product> Products { get; set; }
-		public DbSet<Manager> Managers { get; set; }
-		public DbSet<Sale> Sales { get; set; }
+		public DbSet<Seller> Sellers { get; set; }
+		public DbSet<Sale> Purchases { get; set; }
 	}
 }

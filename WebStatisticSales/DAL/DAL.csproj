@@ -68,7 +68,7 @@
     <Compile Include="Abstractions\IGenericRepository.cs" />
     <Compile Include="GenericRepository.cs" />
     <Compile Include="Models\Client.cs" />
-    <Compile Include="Models\Manager.cs" />
+    <Compile Include="Models\Seller.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\Sale.cs" />
     <Compile Include="Models\SalesDbContext.cs" />

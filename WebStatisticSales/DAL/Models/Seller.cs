@@ -2,10 +2,10 @@
 
 namespace DAL.Models
 {
-	public class Client
+	public class Seller
 	{
 		public int Id { get; set; }
 		public string Name { get; set; }
-		public ICollection<Sale> Purchases { get; set; }
+		public ICollection<Sale> Sales { get; set; }
 	}
 }

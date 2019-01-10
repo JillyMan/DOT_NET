@@ -6,7 +6,7 @@ namespace DAL.Abstractions
 {
 	public interface IGenericRepository<T>
 	{
-		IQueryable<T> Get(Expression<Func<T, bool>> filter = null);
+		IQueryable<T> Get(Expression<Func<T, bool>> filter = null, string includeProperties = "");
 		T GetById(object id);
 		void Insert(T item);
 		void Update(T item);
