@@ -8,28 +8,19 @@ using System.Web.Mvc;
 
 namespace WebStatisticSales.Models
 {
-	public class PageInfo
+	public class SaleFilterView
 	{
-		public int PageNumber { get; set; }
-		public int PageSize { get; set; }
-		public int TotalItems { get; set; }
-		public int TotalPage
-		{
-			get
-			{
-				if(TotalPage == 0)
-				{
-					return 0;
-				}
-				return (int)Math.Ceiling((decimal)TotalItems / TotalPage);
-			}
-		}
-	}
+		[Display(Name = "Имя покупателя")]
+		public string ClientFilter { get; set; }
 
-	public class PageIndexViewModel
-	{
-		public PageInfo PageInfo { get; set; }
-		public IEnumerable<SaleView> Sales { get; set; }
+		[Display(Name = "Имя продавца")]
+		public string SellerFilter { get; set; }
+
+		[Display(Name = "Название продукта")]
+		public string ProductFilter { get; set; }
+
+		[Range(1, int.MaxValue, ErrorMessage = "Недопустимая цена")]
+		public int? CostFilter { get; set; }
 	}
 
 	public class SaleView
@@ -55,30 +46,6 @@ namespace WebStatisticSales.Models
 		public DateTime Date { get; set; }
 	}
 
-	public class SaleIndexView
-	{
-		public IEnumerable<SaleView> SaleView { get; set; }
-		public SaleFileterView Filter { get; set; }
-	}
-
-
-	public class SaleFileterView
-	{
-		[Required]
-		[Display(Name = "Клиеты")]
-		public SelectList Clients { get; set; }
-
-		[Required]
-		[Display(Name = "Продавец")]
-		public SelectList Sellers { get; set; }
-
-		[Required]
-		[Display(Name = "Продукт")]
-		public SelectList Products { get; set; }
-	}
-
-
-
 	public class SaleCreateView
 	{
 		[Display(Name = "Продавец")]
@@ -103,7 +70,6 @@ namespace WebStatisticSales.Models
 		[Display(Name = "Дата продажи")]
 		public DateTime Date { get; set; }
 	}
-
 
 	public class SaleEditView
 	{

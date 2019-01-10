@@ -3,21 +3,67 @@
     ViewBag.Title = "SalesIndex";
 }
 
+<style>
+    #form_filter {
+        border: 1px solid gray;
+        padding: 10px;
+    }
+
+    #filtersBtn {
+        margin: 10px;
+    }
+</style>
+
 <h2>Продажи</h2>
 
 <div id="loader">
     <h2>Идет загрузка данных...</h2>
     <div class="load_spinner"></div>
 </div>
+<div class="container">
+    <div id="filters_container" hidden class="col-sm-9">
+        <button class="btn btn-secondary" type="button" id="filtersBtn">Фильтры</button>
+        <button id="openCreateFormBtn" class="btn btn-primary">Добавить продажу</button>
+        <form id="form_filter" hidden>
+            <div class="form-inline">
+                <div class="form-group col-sm">
+                    <label for="ClientFilter">Выбор клиента</label>
+                    @Html.TextBox("ClientFilter", ViewBag.Filter.ClientFilter as string, new { @class = "form-control" })
+                </div>
+                <div class="form-group col-sm">
+                    <label for="selectSeller">Выбор продавца</label>
+                    @Html.TextBox("SellerFilter", ViewBag.Filter.SellerFilter as string, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-inline">
+                <div class="form-group col-sm">
+                    <label for="ProductFilter">Выбор продукта</label>
+                    @Html.TextBox("ProductFilter", ViewBag.Filter.ProductFilter as string, new { @class = "form-control" })
+                </div>
+                <div class="form-group col-sm">
+                    <label for="CostFilter">Цена</label>
+                    @Html.TextBox("CostFilter", ViewBag.Filter.CostFilter as string, new { @class = "form-control" })
+                </div>
+            </div>
+            <hr/>
+            <div class="form-inline">
+                <div class="form-group col-sm">
+                    <input id="submit_filter_btn" class="btn btn-primary mb-2" type="submit" value="Найти">
+                </div>
+                <div class="form-group col-sm">
+                    <button id="reset_filter_btn" class="btn btn-secondary mb-2">Сброс</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <br />
+    <div id="sales"></div>
+</div>
 
-<div id="filter_container" class="col-sm-9"></div>
-
-<button id="openCreateFormBtn" class="btn btn-primary">Добавить продажу</button>
-<div id="sales"></div>
 <div id="dialog_window"></div>
 
 @section scripts {
-<script>
+    <script>
 
     /*
         TODO: move editSale in Edit.cshtml file, -> function edit(id, idElemForLoad)
@@ -37,17 +83,34 @@
 
     function loadData(page) {
         $("#loader").css('display', "display");
-        $("#sales").load('@Url.Action("Load", "Sales")/' + page,
+        $("#filters_container").hide();
+        console.log("load data");
+        var data = $("#form_filter").serialize() + "&page=" + page;
+        $("#sales").load('@Url.Action("Load", "Sales")/?', data,
             function () {
+                $("#filters_container").show();
                 $("#loader").css('display', "none");
             }
         );
-//      $("#filter_container").load('@Url.Action("Load", "Sales")');
     }
 
-    function editSale(id) {
-        $("#dialog_window").load('@Url.Action("Edit", "Sales")/' + id);
-    }
+    //----------------------Filter scripts-----------------------
+    $("#reset_filter_btn").click((event) => {
+        event.preventDefault();
+        //$("#form_filter").prop('value', "");
+        //loadData();
+    });
+
+    $("#filtersBtn").click(() => {
+        $("#form_filter").toggle();
+    });
+
+    $("#submit_filter_btn").click(() => {
+        $("#form_filter").on('submit', (event) => {
+            event.preventDefault();
+            loadData();
+        });
+    });
 
     </script>
 }

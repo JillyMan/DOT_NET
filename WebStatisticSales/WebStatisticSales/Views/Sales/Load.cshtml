@@ -1,5 +1,5 @@
-﻿@model IEnumerable<WebStatisticSales.Models.SaleView>
-
+﻿@model PagedList.IPagedList<WebStatisticSales.Models.SaleView>
+@using PagedList.Mvc
 
 <style>
     tr:hover {
@@ -15,42 +15,48 @@
         background-color: #353f51;
         color: white;
     }
-    
+
     #filter_form {
         border: 1px solid gray;
         padding: 15px;
     }
+
+    table {
+        border-radius: 10px;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        border: 1px solid #000;
+    }
 </style>
-<div class="container">
-    <div class="col-sm-9">
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th scope="col">Клиент</th>
-                    <th scope="col">Продукт</th>
-                    <th scope="col">Продавец</th>
-                    <th scope="col">Цена</th>
-                    <th scope="col">Дата</th>
+
+<div class="col-sm-9">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">Клиент</th>
+                <th scope="col">Продукт</th>
+                <th scope="col">Продавец</th>
+                <th scope="col">Цена</th>
+                <th scope="col">Дата</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var sale in Model)
+            {
+                <tr onclick="editSale(@sale.Id)">
+                    <td>@sale.Client</td>
+                    <td>@sale.Product</td>
+                    <td>@sale.Seller</td>
+                    <td>@sale.Cost</td>
+                    <td>@Html.DisplayFor(m => sale.Date)</td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach (var sale in Model)
-                {
-                    <tr onclick="editSale(@sale.Id)">
-                        <td>@sale.Client</td>
-                        <td>@sale.Product</td>
-                        <td>@sale.Seller</td>
-                        <td>@sale.Cost</td>
-                        <td>@Html.DisplayFor(m => sale.Date)</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-        <nav aria-label="Page navigation example">
-            <ul class="pagination">
-                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                <li class="page-item"><a class="page-link" href="#">Next</a></li>
-            </ul>
-        </nav>
-    </div>
+            }
+        </tbody>
+    </table>
+    @*<nav aria-label="Page navigation">
+            Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+            @Html.PagedListPager(
+                        Model, page => Url.Action("Load", "Sales", new { filter = ViewBag.Filter, page = page }),
+                        PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "block_sales" }))
+        </nav>*@
 </div>

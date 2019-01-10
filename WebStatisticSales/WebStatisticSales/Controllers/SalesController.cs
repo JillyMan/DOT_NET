@@ -1,16 +1,25 @@
-﻿using DAL;
+﻿using AutoMapper;
+using DAL;
 using DAL.Abstractions;
 using DAL.Models;
+using PagedList;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Web;
 using System.Web.Mvc;
 using WebStatisticSales.Models;
 
 namespace WebStatisticSales.Controllers
 {
-    public class SalesController : Controller
+
+	interface IFilter<T> where T : class
+	{
+		IFilter<T> Build(Expression<Func<T, bool>> expression);
+	}
+
+	public class SalesController : Controller
     {
 		private SalesDbContext _context;
 		private IGenericRepository<Sale> _repositorySales;
@@ -32,14 +41,49 @@ namespace WebStatisticSales.Controllers
         // GET: Sales
         public ActionResult Index()
 		{
-            return View();
+			ViewBag.Filter = new SaleFilterView();
+
+			return View();
         }
 
+		//TODO: validation page , pageSize take with WebConfig ?
 		[HttpGet]
-		public PartialViewResult Load(int? page)
+		public PartialViewResult Load(SaleFilterView filter, int? page)
 		{
-			var sales = AutoMapper.Mapper.Map<IEnumerable<Sale>, List<SaleView>>(_repositorySales.Get(null, _includesPropertiesForSales));
-			return PartialView(sales);
+			var sales = _repositorySales.Get(null, _includesPropertiesForSales);
+			if(filter != null)
+			{
+				if (filter.ClientFilter != null)
+				{
+					sales = sales.Where(x => x.Client.Name.Equals(filter.ClientFilter));
+				}
+
+				if (filter.ProductFilter != null)
+				{
+					sales = sales.Where(x => x.Product.Name.Equals(filter.ProductFilter));
+				}
+
+				if (filter.SellerFilter != null)
+				{
+					sales = sales.Where(x => x.Seller.Name.Equals(filter.SellerFilter));
+				}
+
+				if (filter.CostFilter != null)
+				{
+					sales = sales.Where(x => x.Summa == filter.CostFilter);
+				}
+			}
+			//else
+			//{
+			//	ViewBag.Filter = new SaleFilterView();
+			//}
+
+			var salesView = Mapper.Map<IEnumerable<Sale>, List<SaleView>>(sales);
+
+			int pageSize = 50;
+			int pageNumber = page ?? 1;
+		
+			return PartialView(salesView.ToPagedList(pageNumber, pageSize));
 		}
 
 		[HttpGet]

@@ -14,8 +14,7 @@
                     <input type="checkbox" class="custom-control-input" id="editOrDetail">
                     <label class="custom-control-label" for="editOrDetail">Edit</label>
                 </div>
-                @using (Html.BeginForm())
-                {
+                <form id="editForm">                    
                     @Html.ValidationSummary(false)
                     @Html.HiddenFor(m => m.Id)
 
@@ -47,7 +46,7 @@
                     </div>
 
                     <input id="updateBtn" type="submit" class="btn btn-success" value="Обновить" />
-                }
+                </form>
             </div>
             <div class="modal-footer">
                 <button id="deleteBtn" type="button" class="btn btn-danger">Delete</button>                
@@ -80,17 +79,17 @@
     });
 
     $("#editOrDetail").click(() => {
-        $("#form :input").prop('disabled', function (i, v) { return !v; });
+        $("#editForm :input").prop('disabled', function (i, v) { return !v; });
 //        $("#saveSale").
     });
 
     function edit() {
-        $("form").on("submit", function (e) {
+        $("#editForm").on("submit", function (e) {
             e.preventDefault();
 //            if ($("#editOrDetail").is(":checked")) {
                 console.log("try edit sale");
                 $.post('@Url.Action("Edit", "Sales")',
-                    $("form").serialize(),
+                    $("#editForm").serialize(),
                     function (data, textStatus, jHXR) {
                         $("#editDetailModal").modal('hide');
                         loadData();

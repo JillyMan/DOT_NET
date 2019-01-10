@@ -10,8 +10,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                @using (Html.BeginForm())
-                {
+                <form id="saveForm">
                     @Html.ValidationSummary(false)
 
                     <div class="form-group">
@@ -42,7 +41,7 @@
                     </div>
 
                     <input id="saveBtn" type="submit" class="btn btn-success" value="Добавить" />
-                }
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -58,10 +57,10 @@
     });
 
     function savePurchase() {
-        $("form").on("submit", (event) => {
+        $("#saveForm").on("submit", (event) => {
             event.preventDefault();
             $.post('@Url.Action("Create", "Sales")',
-                $("form").serialize(),
+                $("#saveForm").serialize(),
                 (data, textStatus, jHXR) => {
                     loadData();
                     $("#saveSaleModal").modal('hide');
