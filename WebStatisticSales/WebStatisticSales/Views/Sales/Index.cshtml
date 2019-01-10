@@ -3,7 +3,7 @@
     ViewBag.Title = "SalesIndex";
 }
 
-<h2>Index</h2>
+<h2>Продажи</h2>
 
 <div id="loader">
     <h2>Идет загрузка данных...</h2>
@@ -11,18 +11,24 @@
 </div>
 
 <div id="filter_container" class="col-sm-9"></div>
+
+<button id="openCreateFormBtn" class="btn btn-primary">Добавить продажу</button>
 <div id="sales"></div>
-<button id="openCreateFormBtn" class="btn btn-primary">Добавить клиента</button>
 <div id="dialog_window"></div>
 
 @section scripts {
 <script>
+
+    /*
+        TODO: move editSale in Edit.cshtml file, -> function edit(id, idElemForLoad)
+    */
+
     $(document).ready(() => {
         loadData(1);
     });
 
     $("#openCreateFormBtn").click(() => {
-        $("#dialog_window").load('@Url.Action("Create", "Sale"));
+        $("#dialog_window").load('@Url.Action("Create", "Sales")');
     });
 
     function editSale(id) {
@@ -31,12 +37,17 @@
 
     function loadData(page) {
         $("#loader").css('display', "display");
-        $("#sales").load('@Url.Action("Load", "Sale")/' + page,
+        $("#sales").load('@Url.Action("Load", "Sales")/' + page,
             function () {
                 $("#loader").css('display', "none");
             }
         );
+//      $("#filter_container").load('@Url.Action("Load", "Sales")');
     }
 
-</script>
+    function editSale(id) {
+        $("#dialog_window").load('@Url.Action("Edit", "Sales")/' + id);
+    }
+
+    </script>
 }

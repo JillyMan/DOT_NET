@@ -1,6 +1,6 @@
-﻿@model WebStatisticSales.Models.SaleEditView
+﻿@model WebStatisticSales.Models.SaleCreateView
 
-<div class="modal fade" id="editDetailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="saveSaleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -10,14 +10,9 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="editOrDetail">
-                    <label class="custom-control-label" for="editOrDetail">Edit</label>
-                </div>
                 @using (Html.BeginForm())
                 {
                     @Html.ValidationSummary(false)
-                    @Html.HiddenFor(m => m.Id)
 
                     <div class="form-group">
                         @Html.LabelFor(m => m.SellerId)
@@ -46,11 +41,10 @@
                         @Html.ValidationMessageFor(model => model.Date)
                     </div>
 
-                    <input id="updateBtn" type="submit" class="btn btn-success" value="Обновить" />
+                    <input id="saveBtn" type="submit" class="btn btn-success" value="Добавить" />
                 }
             </div>
             <div class="modal-footer">
-                <button id="deleteBtn" type="button" class="btn btn-danger">Delete</button>                
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
@@ -58,48 +52,23 @@
 </div> 
 
 <script>
-    /*
-         TODO: Fixt UI bags; 
-    */
 
-    $("#editDetailModal").ready(() => {
-        $("#editDetailModal").modal();
+    $("#saveSaleModal").ready(() => {
+        $("#saveSaleModal").modal();
     });
 
-    $("#deleteBtn").click((event) => {
-       event.preventDefault();
-        var result = confirm("Вы действительно хотите удалить продажу?");
-        if (result == true) {
-            $.get('@Url.Action("Delete", "Sales")/' + @Model.Id, 
-                () => {
-                    $("#editDetailModal").modal('hide');
+    function savePurchase() {
+        $("form").on("submit", (event) => {
+            event.preventDefault();
+            $.post('@Url.Action("Create", "Sales")',
+                $("form").serialize(),
+                (data, textStatus, jHXR) => {
                     loadData();
+                    $("#saveSaleModal").modal('hide');
                 }
-            );
-        }
-    });
-
-    $("#editOrDetail").click(() => {
-        $("#form :input").prop('disabled', function (i, v) { return !v; });
-//        $("#saveSale").
-    });
-
-    function edit() {
-        $("form").on("submit", function (e) {
-            e.preventDefault();
-//            if ($("#editOrDetail").is(":checked")) {
-                console.log("try edit sale");
-                $.post('@Url.Action("Edit", "Sales")',
-                    $("form").serialize(),
-                    function (data, textStatus, jHXR) {
-                        $("#editDetailModal").modal('hide');
-                        loadData();
-                    }
-                );
-  //          }
+            )
         });
     }
 
-    $("#updateBtn").click(edit);
-
+    $("#saveBtn").click(savePurchase);
 </script>

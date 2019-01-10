@@ -1,5 +1,6 @@
 ﻿@model IEnumerable<WebStatisticSales.Models.SaleView>
 
+
 <style>
     tr:hover {
         background-color: #353f51;
@@ -20,9 +21,7 @@
         padding: 15px;
     }
 </style>
-
 <div class="container">
-    <button class="btn btn-secondary" type="button" id="filtersBtn">Filters</button>
     <div class="col-sm-9">
         <table class="table table-bordered">
             <thead>
@@ -35,14 +34,14 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach(var sale in Model)
+                @foreach (var sale in Model)
                 {
                     <tr onclick="editSale(@sale.Id)">
-                        <td>@sale.ClientName</td>
+                        <td>@sale.Client</td>
                         <td>@sale.Product</td>
                         <td>@sale.Seller</td>
                         <td>@sale.Cost</td>
-                        <td>@Html.DisplayFor(m => sale.Data)</td>
+                        <td>@Html.DisplayFor(m => sale.Date)</td>
                     </tr>
                 }
             </tbody>

@@ -327,6 +327,7 @@
     <Content Include="Views\Sales\Load.cshtml" />
     <Content Include="Views\Sales\FilterPartial.cshtml" />
     <Content Include="Views\Sales\Edit.cshtml" />
+    <Content Include="Views\Sales\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

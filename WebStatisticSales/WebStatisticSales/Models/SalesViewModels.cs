@@ -37,7 +37,7 @@ namespace WebStatisticSales.Models
 		[HiddenInput(DisplayValue = false)]
 		public int Id { get; set; }
 
-		[Display(Name = "Продовец")]
+		[Display(Name = "Продавец")]
 		public string Seller { get; set; }
 
 		[Display(Name = "Клиeнт")]
@@ -51,7 +51,7 @@ namespace WebStatisticSales.Models
 
 		[Display(Name = "Дата продажи")]
 		[DataType(DataType.Date)]
-		[DisplayFormat(DataFormatString = "mm/dd/yyyy")]
+		//[DisplayFormat(DataFormatString = "{mm/dd/yyyy}")]
 		public DateTime Date { get; set; }
 	}
 
@@ -61,30 +61,6 @@ namespace WebStatisticSales.Models
 		public SaleFileterView Filter { get; set; }
 	}
 
-	public class SaleCreateView
-	{
-		[Display(Name = "Продовец")]
-		[Required(ErrorMessage = "Установите продавца")]
-		public Manager SellerName { get; set; }
-
-		[Required(ErrorMessage = "Установите имя клиента")]
-		[Display(Name = "Клиeнт")]
-		public Client ClientName { get; set; }
-
-		[Required(ErrorMessage = "Установите навание продукта")]
-		[Display(Name = "Название продукта")]
-		public Product Product { get; set; }
-
-		[Required]
-		[Display(Name = "Стоимость")]
-		[Range(1, int.MaxValue, ErrorMessage = "Недопустимая цена")]
-		public int Cost { get; set; }
-
-		[Required]
-		[DataType(DataType.Date)]
-		[Display(Name = "Дата продажи")]
-		public DateTime Data { get; set; }
-	}
 
 	public class SaleFileterView
 	{
@@ -93,7 +69,7 @@ namespace WebStatisticSales.Models
 		public SelectList Clients { get; set; }
 
 		[Required]
-		[Display(Name = "Продовец")]
+		[Display(Name = "Продавец")]
 		public SelectList Sellers { get; set; }
 
 		[Required]
@@ -101,25 +77,21 @@ namespace WebStatisticSales.Models
 		public SelectList Products { get; set; }
 	}
 
-	public class SaleEditView
-	{
-		[HiddenInput(DisplayValue = false)]
-		public int Id { get; }
 
-		[Display(Name = "Продовец")]
-		[Required(ErrorMessage = "Установите прововца")]
-		[StringLength(50, MinimumLength = 3, ErrorMessage = "Длина строки от 3 до 50")]
-		public Manager SallerName { get; set; }
+
+	public class SaleCreateView
+	{
+		[Display(Name = "Продавец")]
+		[Required(ErrorMessage = "Выберите продовца")]
+		public int SellerId { get; set; }
 
 		[Display(Name = "Клиeнт")]
-		[Required(ErrorMessage = "Установите имя клиента")]
-		[StringLength(50, MinimumLength = 3, ErrorMessage = "Длина строки от 3 до 50")]
-		public Client ClientName { get; set; }
+		[Required(ErrorMessage = "Выберите покупателя")]
+		public int ClientId { get; set; }
 
+		[Required(ErrorMessage = "Продукт")]
 		[Display(Name = "Название продукта")]
-		[Required(ErrorMessage ="Установите навание продукта")]
-		[StringLength(50, MinimumLength = 3, ErrorMessage = "Длина строки от 3 до 50")]
-		public Product Product { get; set; }
+		public int ProductId { get; set; }
 
 		[Required]
 		[Display(Name = "Стоимость")]
@@ -129,6 +101,35 @@ namespace WebStatisticSales.Models
 		[Required]
 		[DataType(DataType.Date)]
 		[Display(Name = "Дата продажи")]
-		public DateTime Data { get; set; }
+		public DateTime Date { get; set; }
+	}
+
+
+	public class SaleEditView
+	{
+		[HiddenInput(DisplayValue = false)]
+		public int Id { get; set; }
+
+		[Display(Name = "Продавец")]
+		[Required(ErrorMessage = "Выберите продовца")]
+		public int SellerId { get; set; }
+
+		[Display(Name = "Клиeнт")]
+		[Required(ErrorMessage = "Выберите покупателя")]
+		public int ClientId { get; set; }
+
+		[Required(ErrorMessage = "Продукт")]
+		[Display(Name = "Название продукта")]
+		public int ProductId { get; set; }
+
+		[Required]
+		[Display(Name = "Стоимость")]
+		[Range(1, int.MaxValue, ErrorMessage = "Недопустимая цена")]
+		public int Cost { get; set; }
+
+		[Required]
+		[DataType(DataType.Date)]
+		[Display(Name = "Дата продажи")]
+		public DateTime Date { get; set; }
 	}
 }
