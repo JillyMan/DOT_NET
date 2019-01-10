@@ -1,0 +1,42 @@
+﻿@model WebStatisticSales.Models.SaleView
+@{
+    ViewBag.Title = "SalesIndex";
+}
+
+<h2>Index</h2>
+
+<div id="loader">
+    <h2>Идет загрузка данных...</h2>
+    <div class="load_spinner"></div>
+</div>
+
+<div id="filter_container" class="col-sm-9"></div>
+<div id="sales"></div>
+<button id="openCreateFormBtn" class="btn btn-primary">Добавить клиента</button>
+<div id="dialog_window"></div>
+
+@section scripts {
+<script>
+    $(document).ready(() => {
+        loadData(1);
+    });
+
+    $("#openCreateFormBtn").click(() => {
+        $("#dialog_window").load('@Url.Action("Create", "Sale"));
+    });
+
+    function editSale(id) {
+        $("#dialog_window").load('@Url.Action("Edit", "Sales")/' + id);
+    }
+
+    function loadData(page) {
+        $("#loader").css('display', "display");
+        $("#sales").load('@Url.Action("Load", "Sale")/' + page,
+            function () {
+                $("#loader").css('display', "none");
+            }
+        );
+    }
+
+</script>
+}

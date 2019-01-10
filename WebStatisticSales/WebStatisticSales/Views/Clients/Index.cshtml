@@ -1,0 +1,60 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Информация о клиентах</h2>
+
+<div id="loader">
+    <h2>Идет загрузка данных...</h2>
+    <div class="load_spinner"></div>
+</div>
+
+<div class="row">
+    <div class="col-sm-6">
+        <div id="data_clients"> </div>
+    </div>
+    <div class="col-sm-5">
+        <button id="openCreateFormBtn" class="btn btn-primary">Добавить клиента</button>
+        <div id="dialog_form"></div>
+    </div>
+</div>
+
+@section scripts {
+
+<script>
+
+    $(document).ready(function () {
+        loadData();
+    });
+
+    openAddForm = function () {
+        console.log("Create opening");
+        $("#dialog_form").load('@Url.Action("Create", "Clients")');
+    }
+
+    openEditForm = function (idClient) {
+        console.log("Edit opening")
+        $("#dialog_form").load('@Url.Action("Edit", "Clients")/' + idClient);
+    }
+
+    function deleteClient(id) {
+        $.post('@Url.Action("Delete", "Clients")/'+ id,
+            function () {
+                loadData();
+            }
+        );
+    }
+  
+    function loadData() {
+        $("#loader").css('display', "display");
+        $("#data_clients").load('@Url.Action("Load", "Clients")',
+            function () {
+                $("#loader").css('display', "none");
+            }
+        );
+    }
+
+    $("#openCreateFormBtn").click(openAddForm);
+
+</script>
+}

@@ -1,0 +1,98 @@
+﻿
+
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="editOrDetail">
+                    <label class="custom-control-label" for="editOrDetail">Edit</label>
+                </div>
+                <form id="editForm">
+                    <div class="form-group">
+                        <label for="Product">Выбор продавца</label>
+                        <select id="Seller" name="Seller" class="form-control">
+                            <option value="" selected disabled hidden></option>
+                            <option>Петя</option>
+                            <option>Витя</option>
+                            <option>Оля</option>
+                            <option>Артём</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="Product">Выбор продукта</label>
+                        <select id="Product" name="Product" class="form-control">
+                            <option value="" selected disabled hidden></option>
+                            <option>Вино</option>
+                            <option>Хлеб</option>
+                            <option>Печенье</option>
+                            <option>Шоколад</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="Product">Выбор покупателя</label>
+                        <select id="Client" name="Client" class="form-control">
+                            <option value="" selected disabled hidden></option>
+                            <option>Вася</option>
+                            <option>Петя</option>
+                            <option>Витя</option>
+                            <option>Оля</option>
+                            <option>Артём</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="Product">Цена</label>
+                        <input class="form-control" type="text" name="Cost">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dateTime">Дата</label>
+                        <input id="dateTime" class="form-control" type="date" name="dateTime">
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="saveSale" type="button" class="btn btn-primary">Save </button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div> 
+
+<script>
+
+    $("#editModal").ready(() => {
+        showEditSale();
+    });
+
+    function edit() {
+        $("#editOrDetail").on("submit", function (e) {
+            e.preventDefault();
+            if ($("#editOrDetail").is(":checked")) {
+                $.post('@Url.Action("Edit", "Clients")',
+                    $("#editOfDefault").serialize(),
+                    function (data, textStatus, jHXR) {
+                        hideEditSale();
+                        loadData();
+                    }
+                );
+            }
+        });
+    }
+
+    function showEditSale() {
+        $("#editModal").modal();
+    }
+
+    function hideEditSale() {
+        $("#editModal").modal('hide');
+    }
+
+</script>

@@ -1,0 +1,32 @@
+﻿@model  WebStatisticSales.Models.SaleFileterView
+
+<form id="filter_form">
+    <div class="form-row">
+        <div class="form-group col-sm">
+            <label for="clients">Выбор клиента</label>
+            @Html.DropDownList("Clients", Model.Clients as SelectList,
+          htmlAttributes: new { @class = "form-control" });
+            <label for="sellers">Выбор продавцов</label>
+            @Html.DropDownList("Sellers", Model.Sellers as SelectList,
+          htmlAttributes: new { @class = "form-control" });
+        </div>        
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-sm">
+            <label for="Product">Выбор продукта</label>
+            @Html.DropDownList("Products", Model.Products as SelectList,
+        htmlAttributes: new { @class = "form-control" });
+        </div>
+        <div class="form-group col-sm">
+            <label for="Cost">Цена</label>
+            @Html.TextBox("SaleCost", "", new { @class="form-control" })
+        </div>
+    </div>
+
+    <div class="form-group row col-sm-3">
+        <input id="submit_filter_btn" class="btn btn-primary mb-2" type="submit" value="Найти">
+        <hr>
+        <button id="reset_filter_btn" class="btn btn-secondary mb-2">Сброс</button>
+    </div>
+</form>

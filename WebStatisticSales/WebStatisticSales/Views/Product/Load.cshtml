@@ -1,0 +1,40 @@
+﻿@model IEnumerable<WebStatisticSales.Models.ProductIndexView>
+
+@{
+    bool isValidForAction = !(Request.IsAuthenticated && User.IsInRole("Admin"));
+}
+
+@if (Model.Count() > 0)
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Название</th>
+                @if (isValidForAction)
+                {
+                    <th scope="col">Действие</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Model)
+            {
+            <tr>
+                <th scope="row">@product.Id</th>
+                <td>@product.Name</td>
+                @if (isValidForAction)
+                {
+                    <td>
+                        <a href="#" onclick="return openEditForm(@product.Id)">Edit</a> | <a href="#" onclick="return deleteClient(@product.Id)">Delete</a>
+                    </td>
+                }
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h2>База данных пуста.</h2>
+}

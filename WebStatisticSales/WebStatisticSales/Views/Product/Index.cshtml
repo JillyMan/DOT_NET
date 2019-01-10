@@ -1,0 +1,58 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Информация о продуктах</h2>
+
+<div id="loader">
+    <h2>Идет загрузка данных...</h2>
+    <div class="load_spinner"></div>
+</div>
+
+<div class="row">
+    <div class="col-sm-6">
+        <div id="data_clients"> </div>
+    </div>
+    <div class="col-sm-5">
+        <button id="openCreateFormBtn" class="btn btn-primary">Добавить продукт</button>
+        <div id="dialog_form"></div>
+    </div>
+</div>
+
+@section scripts {
+
+<script>
+
+    $(document).ready(function () {
+        loadData();
+    });
+
+    openAddForm = function () {
+        $("#dialog_form").load('@Url.Action("Create", "Product")');
+    }
+
+    openEditForm = function (idClient) {
+        $("#dialog_form").load('@Url.Action("Edit", "Product")/' + idClient);
+    }
+
+    function deleteClient(id) {
+        $.post('@Url.Action("Delete", "Product")/'+ id,
+            function () {
+                loadData();
+            }
+        );
+    }
+  
+    function loadData() {
+        $("#loader").css('display', "display");
+        $("#data_clients").load('@Url.Action("Load", "Product")',
+            function () {
+                $("#loader").css('display', "none");
+            }
+        );
+    }
+
+    $("#openCreateFormBtn").click(openAddForm);
+
+</script>
+}
