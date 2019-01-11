@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BL.Services;
 using DAL;
 using DAL.Abstractions;
 using DAL.Models;
@@ -13,17 +14,11 @@ using WebStatisticSales.Models;
 
 namespace WebStatisticSales.Controllers
 {
-
-	interface IFilter<T> where T : class
-	{
-		IFilter<T> Build(Expression<Func<T, bool>> expression);
-	}
-
 	public class SalesController : Controller
     {
+		private SaleService saleService = new SaleService();
+
 		private SalesDbContext _context;
-		private IGenericRepository<Sale> _repositorySales;
-		private string _includesPropertiesForSales = "Client,Seller,Product";
 
 		private IGenericRepository<Client> _repositoryClients;
 		private IGenericRepository<Seller> _repositorySellers;
@@ -32,26 +27,26 @@ namespace WebStatisticSales.Controllers
 		public SalesController()
 		{
 			_context = new SalesDbContext();
-			_repositorySales = new GenericRepository<Sale>(_context);
 			_repositoryClients  = new GenericRepository<Client>(_context);
 			_repositorySellers = new GenericRepository<Seller>(_context);
 			_repositoryProducts = new GenericRepository<Product>(_context);
 		}
 
-        // GET: Sales
+        [HttpGet]
         public ActionResult Index()
 		{
+			//TODO: Check ViewBag.Filter need her ??? DELETE LETTER !! because don't use
 			ViewBag.Filter = new SaleFilterView();
 
 			return View();
         }
 
-		//TODO: validation page , pageSize take with WebConfig ?
 		[HttpGet]
 		public PartialViewResult Load(SaleFilterView filter, int? page)
 		{
-			var sales = _repositorySales.Get(null, _includesPropertiesForSales);
-			if(filter != null)
+			var sales = saleService.Get();
+
+			if (filter != null)
 			{
 				if (filter.ClientFilter != null)
 				{
@@ -68,24 +63,22 @@ namespace WebStatisticSales.Controllers
 					sales = sales.Where(x => x.Seller.Name.Equals(filter.SellerFilter));
 				}
 
-				if (filter.CostFilter != null)
+				if (filter.CostFilter > 0)
 				{
-					sales = sales.Where(x => x.Summa == filter.CostFilter);
+					sales = sales.Where(x => x.Cost == filter.CostFilter);
 				}
+				ViewBag.Filter = filter;
 			}
-			//else
-			//{
-			//	ViewBag.Filter = new SaleFilterView();
-			//}
 
 			var salesView = Mapper.Map<IEnumerable<Sale>, List<SaleView>>(sales);
 
-			int pageSize = 50;
+			int pageSize = 2;
 			int pageNumber = page ?? 1;
 		
 			return PartialView(salesView.ToPagedList(pageNumber, pageSize));
 		}
 
+		[Authorize(Roles = "Admin")]
 		[HttpGet]
 		public PartialViewResult Create()
 		{
@@ -96,79 +89,93 @@ namespace WebStatisticSales.Controllers
 			return PartialView();
 		}
 
+		[Authorize(Roles = "Admin")]
 		[HttpPost]
 		public JsonResult Create([Bind(Include ="ClientId,ProductId,SellerId,Cost,Date")] SaleCreateView createdSale)
 		{
 			if (ModelState.IsValid)
 			{
-				var saleForInsert = AutoMapper.Mapper.Map<Sale>(createdSale);
-				_repositorySales.Insert(saleForInsert);
-				_repositorySales.Save();
-				return Json(new { result = true });
+				var saleForInsert = Mapper.Map<Sale>(createdSale);
+
+				try
+				{
+					saleService.AddSale(saleForInsert);
+					return Json(new { result=true, message="Sale added"});
+				}
+				catch (Exception e)
+				{
+					return Json(new { result=false, message = e.Message });
+				}
 			}
 
 			return Json(new { result = false, message="Model is invalid"});
 		}
 
+		[Authorize(Roles = "Admin")]
 		[HttpGet]
-		public JsonResult Delete(int? id)
+		public JsonResult Delete(int id)
 		{
-			if(id != null && id > 0)
+			if(id > 0)
 			{
-				_repositorySales.Delete(id);
-				_repositorySales.Save();
-
-				return Json(new { result = true }, JsonRequestBehavior.AllowGet);
+				try
+				{
+					saleService.Delete(id);
+					return Json(new { result = true }, JsonRequestBehavior.AllowGet);
+				}
+				catch(Exception e)
+				{
+					return Json(new { result = true, message=e.Message }, JsonRequestBehavior.AllowGet);
+				}
 			}
-			return Json(new { result = false, message = "Can't delet!" }, JsonRequestBehavior.AllowGet);
+			return Json(new { result = false, message = "Can't delete, Sorry.." }, JsonRequestBehavior.AllowGet);
 		}
 
+		[Authorize(Roles = "Admin")]
 		[HttpGet]
-		public PartialViewResult Edit(int? id)
+		public PartialViewResult Edit(int id)
 		{
-			if(id != null && id > 0)
+			if(id > 0)
 			{
-				var sale = _repositorySales.GetById(id);
+				var sale = saleService.GetById(id);
 				if(sale == null)
 				{
 					/*
 					 * TODO: question what does with errors?
-					 * saleEdit: contains ID?
 					*/
 					return PartialView("~/Views/Shared/Error.cshtml");
 				}
 
-				SaleEditView editSale = new SaleEditView
-				{
-					Id = sale.Id,
-					Cost = sale.Summa,
-					Date = sale.Date,
-					ClientId = sale.ClientId.Value,
-					SellerId = sale.SellerId.Value,
-					ProductId = sale.ProductId.Value,
-				};
+				var editSaleView = Mapper.Map<SaleEditView>(sale);
 
+				//TODO: use unit of work for geting values..
 				ViewBag.Clients = new SelectList(_repositoryClients.Get(), "Id", "Name");
 				ViewBag.Products = new SelectList(_repositoryProducts.Get(), "Id", "Name");
 				ViewBag.Sellers = new SelectList(_repositorySellers.Get(), "Id", "Name");
 
-				return PartialView(editSale);
+				return PartialView(editSaleView);
 			}
 			return PartialView("~/Views/Shared/Error.cshtml");
 		}
 
+		[Authorize(Roles = "Admin")]
 		[HttpPost]
 		public JsonResult Edit([Bind(Include = "Id,ClientId,ProductId,SellerId,Cost,Date")] SaleEditView saleEdit)
 		{
-			if (ModelState.IsValid)
+			if (!ModelState.IsValid)
 			{
-				var saleForUpdate = AutoMapper.Mapper.Map<Sale>(saleEdit);
-				_repositorySales.Update(saleForUpdate);
-				_repositorySales.Save();
-				return Json(new { result = true });
+				return Json(new { result = false, message = "model is not valid" });
 			}
 
-			return Json(new { result = false, message="model is not valid"});
+			var saleForUpdate = Mapper.Map<Sale>(saleEdit);
+			try
+			{
+				saleService.EditSale(saleForUpdate);
+				return Json(new { result = true });
+			}
+			catch (Exception e)
+			{
+				return Json(new { result=false, message = "Can't edit, server error"});
+			}
 		}
 	}
 }

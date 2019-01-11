@@ -9,9 +9,14 @@ namespace BL
 		private DAL.Models.SalesDbContext _context = new DAL.Models.SalesDbContext();
 		private bool _disposed = false;
 
-		public IGenericRepository<Entity> GetRepository<Entity>(Entity entity) where Entity : class
+		public IGenericRepository<Entity> GetRepository<Entity>() where Entity : class
 		{
 			return new GenericRepository<Entity>(_context);
+		}
+
+		public void Save()
+		{
+			_context.SaveChanges();
 		}
 
 		private void Dispose(bool dispose)

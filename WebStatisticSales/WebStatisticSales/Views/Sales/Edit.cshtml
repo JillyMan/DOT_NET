@@ -1,10 +1,11 @@
 ﻿@model WebStatisticSales.Models.SaleEditView
+@Scripts.Render("~/bundles/jqueryval")
 
 <div class="modal fade" id="editDetailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Детали продажи</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -14,8 +15,10 @@
                     <input type="checkbox" class="custom-control-input" id="editOrDetail">
                     <label class="custom-control-label" for="editOrDetail">Edit</label>
                 </div>
-                <form id="editForm">                    
-                    @Html.ValidationSummary(false)
+                <form id="editForm">
+                    <label class="serverError"></label>
+
+                    @Html.ValidationSummary(true)
                     @Html.HiddenFor(m => m.Id)
 
                     <div class="form-group">
@@ -46,30 +49,56 @@
                     </div>
 
                     <input id="updateBtn" type="submit" class="btn btn-success" value="Обновить" />
+                    <input id="deleteBtn" type="button" class="btn btn-danger" value="Удалить" />
                 </form>
             </div>
             <div class="modal-footer">
-                <button id="deleteBtn" type="button" class="btn btn-danger">Delete</button>                
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
             </div>
         </div>
     </div>
-</div> 
+</div>
 
 <script>
     /*
-         TODO: Fixt UI bags; 
+         TODO: Fixt UI bags;
     */
-
     $("#editDetailModal").ready(() => {
         $("#editDetailModal").modal();
+        $("#editForm :input").prop("disabled", true);
+    });
+
+    function edit() {
+        $("#editForm").on("submit", function (e) {
+            e.preventDefault();
+            if ($("#editOrDetail").is(":checked")) {
+                $.post('@Url.Action("Edit", "Sales")',
+                    $("#editForm").serialize(),
+                    function (data, textStatus, jHXR) {
+                        if (data.result == true) {
+                            $("#editDetailModal").modal('hide');
+                            loadData();
+                        }
+                        else {
+                            $(".serverError").text(data.message);
+                        }
+                    }
+                );
+            }
+        });
+    }
+
+    $("#updateBtn").click(edit);
+
+    $("#editOrDetail").click(() => {
+        $("#editForm :input").prop("disabled", function (i, v) { return !v; });
     });
 
     $("#deleteBtn").click((event) => {
        event.preventDefault();
         var result = confirm("Вы действительно хотите удалить продажу?");
         if (result == true) {
-            $.get('@Url.Action("Delete", "Sales")/' + @Model.Id, 
+            $.get('@Url.Action("Delete", "Sales")/' + @Model.Id,
                 () => {
                     $("#editDetailModal").modal('hide');
                     loadData();
@@ -77,28 +106,5 @@
             );
         }
     });
-
-    $("#editOrDetail").click(() => {
-        $("#editForm :input").prop('disabled', function (i, v) { return !v; });
-//        $("#saveSale").
-    });
-
-    function edit() {
-        $("#editForm").on("submit", function (e) {
-            e.preventDefault();
-//            if ($("#editOrDetail").is(":checked")) {
-                console.log("try edit sale");
-                $.post('@Url.Action("Edit", "Sales")',
-                    $("#editForm").serialize(),
-                    function (data, textStatus, jHXR) {
-                        $("#editDetailModal").modal('hide');
-                        loadData();
-                    }
-                );
-  //          }
-        });
-    }
-
-    $("#updateBtn").click(edit);
 
 </script>

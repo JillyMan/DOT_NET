@@ -14,7 +14,10 @@
         <div id="data_clients"> </div>
     </div>
     <div class="col-sm-5">
-        <button id="openCreateFormBtn" class="btn btn-primary">Добавить клиента</button>
+        @if (User.IsInRole("Admin"))
+        {
+            <button id="openCreateFormBtn" class="btn btn-primary">Добавить клиента</button>
+        }
         <div id="dialog_form"></div>
     </div>
 </div>

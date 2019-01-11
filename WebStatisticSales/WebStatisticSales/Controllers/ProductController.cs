@@ -33,14 +33,14 @@ namespace WebStatisticSales.Controllers
 			return PartialView(clientsView);
 		}
 
-		//[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin")]
 		[HttpGet]
 		public PartialViewResult Create()
 		{
 			return PartialView();
 		}
 
-		//[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin")]
 		[HttpPost]
 		public JsonResult Create([Bind(Include = "Name")] Models.ProductCreateView product)
 		{
@@ -57,7 +57,7 @@ namespace WebStatisticSales.Controllers
 			return Json(new { result = false, message = "Не удалось добавить продукт" } );
 		}
 
-		//[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin")]
 		[HttpGet]
 		public PartialViewResult Edit(int? id)
 		{
@@ -69,7 +69,7 @@ namespace WebStatisticSales.Controllers
 			return PartialView("~/Views/Shared/Error.cshtml");
 		}
 
-		//[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin")]
 		[HttpPost]
 		public JsonResult Edit([Bind(Include = "Id,Name")] Models.ProductEditView client)
 		{
@@ -85,7 +85,7 @@ namespace WebStatisticSales.Controllers
 			return Json(new { result = false });
 		}
 
-		//[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin")]
 		[HttpPost]
 		public JsonResult Delete(int? id)
 		{

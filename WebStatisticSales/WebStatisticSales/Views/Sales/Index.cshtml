@@ -7,6 +7,11 @@
     #form_filter {
         border: 1px solid gray;
         padding: 10px;
+        border-radius: 1px;
+    }
+
+    #form_filter > input {
+        width: auto;
     }
 
     #filtersBtn {
@@ -21,17 +26,22 @@
     <div class="load_spinner"></div>
 </div>
 <div class="container">
+    <div id="mainBtnContainer">
+        <button id="filtersBtn" class="btn btn-secondary" type="button">Фильтры</button>
+        @if (User.IsInRole("Admin"))
+        {
+            <button id="openCreateFormBtn" class="btn btn-primary">Добавить продажу</button>
+        }
+    </div>
     <div id="filters_container" hidden class="col-sm-9">
-        <button class="btn btn-secondary" type="button" id="filtersBtn">Фильтры</button>
-        <button id="openCreateFormBtn" class="btn btn-primary">Добавить продажу</button>
-        <form id="form_filter" hidden>
+        <form id="form_filter">
             <div class="form-inline">
                 <div class="form-group col-sm">
                     <label for="ClientFilter">Выбор клиента</label>
                     @Html.TextBox("ClientFilter", ViewBag.Filter.ClientFilter as string, new { @class = "form-control" })
                 </div>
                 <div class="form-group col-sm">
-                    <label for="selectSeller">Выбор продавца</label>
+                    <label for="SellerFilter">Выбор продавца</label>
                     @Html.TextBox("SellerFilter", ViewBag.Filter.SellerFilter as string, new { @class = "form-control" })
                 </div>
             </div>
@@ -45,10 +55,10 @@
                     @Html.TextBox("CostFilter", ViewBag.Filter.CostFilter as string, new { @class = "form-control" })
                 </div>
             </div>
-            <hr/>
+            <hr />
             <div class="form-inline">
                 <div class="form-group col-sm">
-                    <input id="submit_filter_btn" class="btn btn-primary mb-2" type="submit" value="Найти">
+                    <button id="submit_filter_btn" class="btn btn-primary mb-2" type="submit">Найти</button>
                 </div>
                 <div class="form-group col-sm">
                     <button id="reset_filter_btn" class="btn btn-secondary mb-2">Сброс</button>
@@ -64,53 +74,52 @@
 
 @section scripts {
     <script>
-
-    /*
-        TODO: move editSale in Edit.cshtml file, -> function edit(id, idElemForLoad)
-    */
-
-    $(document).ready(() => {
-        loadData(1);
-    });
-
-    $("#openCreateFormBtn").click(() => {
-        $("#dialog_window").load('@Url.Action("Create", "Sales")');
-    });
-
-    function editSale(id) {
-        $("#dialog_window").load('@Url.Action("Edit", "Sales")/' + id);
-    }
-
-    function loadData(page) {
-        $("#loader").css('display', "display");
-        $("#filters_container").hide();
-        console.log("load data");
-        var data = $("#form_filter").serialize() + "&page=" + page;
-        $("#sales").load('@Url.Action("Load", "Sales")/?', data,
-            function () {
-                $("#filters_container").show();
-                $("#loader").css('display', "none");
-            }
-        );
-    }
-
-    //----------------------Filter scripts-----------------------
-    $("#reset_filter_btn").click((event) => {
-        event.preventDefault();
-        //$("#form_filter").prop('value', "");
-        //loadData();
-    });
-
-    $("#filtersBtn").click(() => {
-        $("#form_filter").toggle();
-    });
-
-    $("#submit_filter_btn").click(() => {
-        $("#form_filter").on('submit', (event) => {
-            event.preventDefault();
+        /*
+         *  TODO: move editSale in Edit.cshtml file, -> function edit(id, idElemForLoad)
+         */
+        $(document).ready(() => {
+            console.log("docs ready");
             loadData();
         });
-    });
+
+        $("#openCreateFormBtn").click(() => {
+            $("#dialog_window").load('@Url.Action("Create", "Sales")');
+        });
+
+        function editSale(id) {
+            $("#dialog_window").load('@Url.Action("Edit", "Sales")/' + id);
+        }
+
+        function loadData(page) {
+            $("#mainBtnContainer").hide();
+            $("#loader").css('display', "display");
+            console.log("load data");
+            var data = $("#form_filter").serialize() + "&page=" + page;
+            $("#sales").load('@Url.Action("Load", "Sales")/?', data,
+                function (data) {
+                    $("#mainBtnContainer").show();
+                    $("#loader").css('display', "none");
+                }
+            );
+        }
+
+        //----------------------Filter scripts-----------------------
+        $("#reset_filter_btn").click((event) => {
+            event.preventDefault();
+            $("#form_filter :input").attr('value', "");
+            //loadData();
+        });
+
+        $("#filtersBtn").click(() => {
+            $("#filters_container").toggle();
+        });
+
+        $("#submit_filter_btn").click((event) => {
+            console.log("click on filter");
+            event.preventDefault();
+            $("#filters_container").toggle();
+            loadData();
+        });
 
     </script>
 }

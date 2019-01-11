@@ -331,7 +331,6 @@
     <Content Include="Views\Product\Index.cshtml" />
     <Content Include="Views\Product\Load.cshtml" />
     <Content Include="Views\Sales\Load.cshtml" />
-    <Content Include="Views\Sales\FilterPartial.cshtml" />
     <Content Include="Views\Sales\Edit.cshtml" />
     <Content Include="Views\Sales\Create.cshtml" />
   </ItemGroup>

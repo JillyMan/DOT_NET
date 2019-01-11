@@ -20,7 +20,7 @@ namespace WebStatisticSales.Models
 		public string ProductFilter { get; set; }
 
 		[Range(1, int.MaxValue, ErrorMessage = "Недопустимая цена")]
-		public int? CostFilter { get; set; }
+		public int CostFilter { get; set; }
 	}
 
 	public class SaleView
@@ -52,7 +52,7 @@ namespace WebStatisticSales.Models
 		[Required(ErrorMessage = "Выберите продовца")]
 		public int SellerId { get; set; }
 
-		[Display(Name = "Клиeнт")]
+		[Display(Name = "Покупатель")]
 		[Required(ErrorMessage = "Выберите покупателя")]
 		public int ClientId { get; set; }
 
@@ -60,12 +60,12 @@ namespace WebStatisticSales.Models
 		[Display(Name = "Название продукта")]
 		public int ProductId { get; set; }
 
-		[Required]
+		[Required(ErrorMessage = "Введите цену")]
 		[Display(Name = "Стоимость")]
 		[Range(1, int.MaxValue, ErrorMessage = "Недопустимая цена")]
 		public int Cost { get; set; }
 
-		[Required]
+		[Required(ErrorMessage = "Введите дату")]
 		[DataType(DataType.Date)]
 		[Display(Name = "Дата продажи")]
 		public DateTime Date { get; set; }
@@ -80,7 +80,7 @@ namespace WebStatisticSales.Models
 		[Required(ErrorMessage = "Выберите продовца")]
 		public int SellerId { get; set; }
 
-		[Display(Name = "Клиeнт")]
+		[Display(Name = "Покупатель")]
 		[Required(ErrorMessage = "Выберите покупателя")]
 		public int ClientId { get; set; }
 

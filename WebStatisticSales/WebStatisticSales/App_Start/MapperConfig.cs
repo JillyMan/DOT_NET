@@ -26,22 +26,21 @@ namespace WebStatisticSales
 				cfg.CreateMap<Product, ProductEditView>().ReverseMap();
 
 				cfg.CreateMap<Sale, SaleView>()
-					.ForMember(x => x.Id, opt => opt.MapFrom(c => c.Id))
 					.ForMember(x => x.Seller, opt => opt.MapFrom(c => c.Seller.Name))
 					.ForMember(x => x.Client, opt => opt.MapFrom(c => c.Client.Name))
-					.ForMember(x => x.Product, opt => opt.MapFrom(c => c.Product.Name))
-					.ForMember(x => x.Cost, opt => opt.MapFrom(c => c.Summa))
-					.ForMember(x => x.Date, opt => opt.MapFrom(c => c.Date));
+					.ForMember(x => x.Product, opt => opt.MapFrom(c => c.Product.Name));
 
-				cfg.CreateMap<Sale, SaleEditView>().ReverseMap()
-					.ForMember(x => x.Summa, opt => opt.MapFrom(c => c.Cost));
+				cfg.CreateMap<SaleCreateView, Sale>();
+				cfg.CreateMap<SaleEditView, Sale>();
 
-				cfg.CreateMap<Sale, SaleEditView> ()
-					.ForMember(x => x.Cost, opt => opt.MapFrom(c => c.Summa));
-
-				cfg.CreateMap<SaleCreateView, Sale>()
-					.ForMember(x => x.Summa, opt => opt.MapFrom(c => c.Cost));
-
+				/* 
+					Id = sale.Id,
+					Cost = sale.Cost,
+					Date = sale.Date,
+					ClientId = sale.ClientId.Value,
+					SellerId = sale.SellerId.Value,
+					ProductId = sale.ProductId.Value,
+				*/
 				//cfg.CreateMap<Sale, Sa{editView>().ReverseMap();
 				//cfg.CreateMap<Sale, SaleCreateView>().ReverseMap();
 			});

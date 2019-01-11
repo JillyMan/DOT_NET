@@ -7,25 +7,9 @@
         color: white;
     }
 
-    #filtersBtn {
-        margin: 10px;
-    }
-
     thead {
         background-color: #353f51;
         color: white;
-    }
-
-    #filter_form {
-        border: 1px solid gray;
-        padding: 15px;
-    }
-
-    table {
-        border-radius: 10px;
-        -webkit-border-radius: 10px;
-        -moz-border-radius: 10px;
-        border: 1px solid #000;
     }
 </style>
 
@@ -33,7 +17,7 @@
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th scope="col">Клиент</th>
+                <th scope="col">Покупатель</th>
                 <th scope="col">Продукт</th>
                 <th scope="col">Продавец</th>
                 <th scope="col">Цена</th>
@@ -53,10 +37,10 @@
             }
         </tbody>
     </table>
-    @*<nav aria-label="Page navigation">
-            Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+    <nav aria-label="Page navigation">
+        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
             @Html.PagedListPager(
                         Model, page => Url.Action("Load", "Sales", new { filter = ViewBag.Filter, page = page }),
-                        PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "block_sales" }))
-        </nav>*@
+                        PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "sales" }))
+    </nav>
 </div>

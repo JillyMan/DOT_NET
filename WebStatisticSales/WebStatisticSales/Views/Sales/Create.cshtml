@@ -1,17 +1,19 @@
 ﻿@model WebStatisticSales.Models.SaleCreateView
+@Scripts.Render("~/bundles/jqueryval")
 
 <div class="modal fade" id="saveSaleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Добавить продажу</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form id="saveForm">
-                    @Html.ValidationSummary(false)
+                <form class="saveForm">
+                    <label id="serverError"></label>
+                    @Html.ValidationSummary(true)
 
                     <div class="form-group">
                         @Html.LabelFor(m => m.SellerId)
@@ -33,7 +35,6 @@
                         @Html.TextBoxFor(m => m.Cost, new { @class = "form-control", @name = "Cost" })
                         @Html.ValidationMessageFor(model => model.Cost)
                     </div>
-
                     <div class="form-group">
                         @Html.LabelFor(m => m.Date)
                         @Html.TextBoxFor(m => m.Date, new { @class = "form-control", @name = "Date" })
@@ -62,8 +63,15 @@
             $.post('@Url.Action("Create", "Sales")',
                 $("#saveForm").serialize(),
                 (data, textStatus, jHXR) => {
-                    loadData();
-                    $("#saveSaleModal").modal('hide');
+                    console.log(data);
+                    console.log(textStatus);
+                    if (data.result == true) {
+                        loadData();
+                        $("#saveSaleModal").modal('hide');
+                    }
+                    else {
+                        $(".serverError").text(data.message);
+                    }
                 }
             )
         });
