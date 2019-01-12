@@ -11,36 +11,138 @@
         background-color: #353f51;
         color: white;
     }
+
+    #form_filter {
+        border: 1px solid gray;
+        padding: 10px;
+        border-radius: 1px;
+    }
+
+    #filtersBtn {
+        margin: 10px;
+    }
+
+    #form_filter > input {
+        background-color: red;
+        width: 100px;
+    }
+
 </style>
 
-<div class="col-sm-9">
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th scope="col">Покупатель</th>
-                <th scope="col">Продукт</th>
-                <th scope="col">Продавец</th>
-                <th scope="col">Цена</th>
-                <th scope="col">Дата</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var sale in Model)
-            {
-                <tr onclick="editSale(@sale.Id)">
-                    <td>@sale.Client</td>
-                    <td>@sale.Product</td>
-                    <td>@sale.Seller</td>
-                    <td>@sale.Cost</td>
-                    <td>@Html.DisplayFor(m => sale.Date)</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-    <nav aria-label="Page navigation">
-        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
-            @Html.PagedListPager(
-                        Model, page => Url.Action("Load", "Sales", new { filter = ViewBag.Filter, page = page }),
-                        PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new AjaxOptions() { HttpMethod = "GET", UpdateTargetId = "sales" }))
-    </nav>
+<div id="mainBtnContainer">
+    <button id="filtersBtn" class="btn btn-secondary" type="button">Фильтры</button>
 </div>
+<div id="filters_container" hidden class="col-sm-8">
+    <form id="form_filter">
+        <div class="form-inline">
+            <div class="form-group">
+                <label for="ClientFilter">Клиент</label>
+                @Html.TextBox("ClientFilter", ViewBag.Filter.ClientFilter as string, new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                <label for="SellerFilter">Продавец</label>
+                @Html.TextBox("SellerFilter", ViewBag.Filter.SellerFilter as string, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-inline">
+            <div class="form-group col-sm">
+                <label for="ProductFilter">Продукт</label>
+                @Html.TextBox("ProductFilter", ViewBag.Filter.ProductFilter as string, new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                <label for="CostFilter">Цена</label>
+                @Html.TextBox("CostFilter", ViewBag.Filter.CostFilter as string, new { @class = "form-control" })
+            </div>
+        </div>
+        <hr />
+        <div class="form-inline">
+            <div class="form-group col-sm">
+                <button id="submit_filter_btn" class="btn btn-primary mb-2" type="submit">Найти</button>
+            </div>
+            <div class="form-group col-sm">
+                <button id="reset_filter_btn" class="btn btn-secondary mb-2">Сброс</button>
+            </div>
+        </div>
+    </form>
+</div>
+<br />
+<div id="dataSales">
+    <div class="col-sm-8">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Покупатель</th>
+                    <th scope="col">Продукт</th>
+                    <th scope="col">Продавец</th>
+                    <th scope="col">Цена</th>
+                    <th scope="col">Дата</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var sale in Model)
+                {
+                    <tr onclick="editSale(@sale.Id)">
+                        <td>@sale.Client</td>
+                        <td>@sale.Product</td>
+                        <td>@sale.Seller</td>
+                        <td>@sale.Cost</td>
+                        <td>@Html.DisplayFor(m => sale.Date)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <nav aria-label="Page navigation">
+            Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+            @Html.PagedListPager(Model,
+                             page => Url.Action("Load", "Sales", new
+                             {
+                                 ClientFilter = ViewBag.Filter.ClientFilter,
+                                 SellerFilter = ViewBag.Filter.SellerFilter,
+                                 ProductFilter = ViewBag.Filter.ProductFilter,
+                                 CostFilter = ViewBag.Filter.CostFilter,
+                                 page = page
+                             }))
+        </nav>
+    </div>
+</div>
+
+<script>
+
+    //----------------------Paginated--------------------
+
+    $(".pagination a").click(function (event) {
+        event.preventDefault();
+        var href = $(this).attr("href");
+        if (href != undefined) {
+            loadData(null, null, null, null, href);
+        }
+    });
+
+    //----------------------Filter-----------------------
+    $("#reset_filter_btn").click((event) => {
+        event.preventDefault();
+        console.log("try clean");
+        //Why with () => {..} don't work, but with function() {..} - OK???
+        $("#form_filter :input").each(function () {
+            $(this).val("");
+        });
+    });
+
+    $("#filtersBtn").click(() => {
+        $("#filters_container").toggle();
+    });
+
+    $("#submit_filter_btn").click((event) => {
+        console.log("click on filter");
+        event.preventDefault();
+        $("#filters_container").toggle();
+        loadData(1, $("#form_filter").serialize(),
+            function () {
+                $("#mainBtnContainer").hide();
+            },
+            function () {
+                $("#mainBtnContainer").show();
+            }
+        );
+    });
+</script>

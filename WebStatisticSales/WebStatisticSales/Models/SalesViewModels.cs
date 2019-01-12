@@ -10,16 +10,9 @@ namespace WebStatisticSales.Models
 {
 	public class SaleFilterView
 	{
-		[Display(Name = "Имя покупателя")]
 		public string ClientFilter { get; set; }
-
-		[Display(Name = "Имя продавца")]
 		public string SellerFilter { get; set; }
-
-		[Display(Name = "Название продукта")]
 		public string ProductFilter { get; set; }
-
-		[Range(1, int.MaxValue, ErrorMessage = "Недопустимая цена")]
 		public int CostFilter { get; set; }
 	}
 

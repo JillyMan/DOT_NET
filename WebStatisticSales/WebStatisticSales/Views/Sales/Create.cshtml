@@ -11,7 +11,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form class="saveForm">
+                <form id="saveForm">
                     <label id="serverError"></label>
                     @Html.ValidationSummary(true)
 
@@ -63,8 +63,6 @@
             $.post('@Url.Action("Create", "Sales")',
                 $("#saveForm").serialize(),
                 (data, textStatus, jHXR) => {
-                    console.log(data);
-                    console.log(textStatus);
                     if (data.result == true) {
                         loadData();
                         $("#saveSaleModal").modal('hide');

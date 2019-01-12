@@ -35,9 +35,6 @@ namespace WebStatisticSales.Controllers
         [HttpGet]
         public ActionResult Index()
 		{
-			//TODO: Check ViewBag.Filter need her ??? DELETE LETTER !! because don't use
-			ViewBag.Filter = new SaleFilterView();
-
 			return View();
         }
 
@@ -69,10 +66,14 @@ namespace WebStatisticSales.Controllers
 				}
 				ViewBag.Filter = filter;
 			}
+			else
+			{
+				ViewBag.Filter = new SaleFilterView();
+			}
 
 			var salesView = Mapper.Map<IEnumerable<Sale>, List<SaleView>>(sales);
 
-			int pageSize = 2;
+			int pageSize = 8;
 			int pageNumber = page ?? 1;
 		
 			return PartialView(salesView.ToPagedList(pageNumber, pageSize));
@@ -104,7 +105,7 @@ namespace WebStatisticSales.Controllers
 				}
 				catch (Exception e)
 				{
-					return Json(new { result=false, message = e.Message });
+					return Json(new { result=false, message = "Server error, sorry" });
 				}
 			}
 
@@ -124,7 +125,7 @@ namespace WebStatisticSales.Controllers
 				}
 				catch(Exception e)
 				{
-					return Json(new { result = true, message=e.Message }, JsonRequestBehavior.AllowGet);
+					return Json(new { result = true, message="Server error, sorry" }, JsonRequestBehavior.AllowGet);
 				}
 			}
 			return Json(new { result = false, message = "Can't delete, Sorry.." }, JsonRequestBehavior.AllowGet);
@@ -139,9 +140,6 @@ namespace WebStatisticSales.Controllers
 				var sale = saleService.GetById(id);
 				if(sale == null)
 				{
-					/*
-					 * TODO: question what does with errors?
-					*/
 					return PartialView("~/Views/Shared/Error.cshtml");
 				}
 
@@ -163,7 +161,7 @@ namespace WebStatisticSales.Controllers
 		{
 			if (!ModelState.IsValid)
 			{
-				return Json(new { result = false, message = "model is not valid" });
+				return Json(new { result = false, message = "Invalid data" });
 			}
 
 			var saleForUpdate = Mapper.Map<Sale>(saleEdit);
