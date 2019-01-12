@@ -69,12 +69,17 @@ namespace BL.Services
 			return _repos.GetById(id);
 		}
 
+
 		private void TryValidateMode(Client client)
 		{
-			if (string.IsNullOrEmpty(client.Name) &&
-				(client.Name.Length > 0 && client.Name.Length < 100))
+			if (string.IsNullOrEmpty(client.Name))
 			{
-				throw new ArgumentOutOfRangeException("Name length out of range");
+				throw new ArgumentNullException("Client name empty or null");
+			}
+
+			if (client.Name.Length < 0 && client.Name.Length > 100)
+			{
+				throw new ArgumentOutOfRangeException("Client name length out of range");
 			}
 		}
 

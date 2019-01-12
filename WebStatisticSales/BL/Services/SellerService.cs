@@ -1,4 +1,5 @@
 ﻿using BL.Abstractions;
+using DAL;
 using DAL.Abstractions;
 using DAL.Models;
 using System;
@@ -75,7 +76,7 @@ namespace BL.Services
 				throw new ArgumentNullException("Seller name empty or null");
 			}
 
-			if (Seller.Name.Length > 0 && Seller.Name.Length < 100)
+			if (Seller.Name.Length < 3 || Seller.Name.Length > 100)
 			{
 				throw new ArgumentOutOfRangeException("Seller name length out of range");
 			}

@@ -1,4 +1,5 @@
 ﻿using BL.Abstractions;
+using DAL;
 using DAL.Abstractions;
 using DAL.Models;
 using System;
@@ -85,7 +86,7 @@ namespace BL.Services
 			if (productRep.GetById(sale.ProductId) == null) throw new InvalidOperationException("Product Id not exist");
 			if (clientRep.GetById(sale.ClientId) == null) throw new InvalidOperationException("Client Id not exist");
 			if (sellerRep.GetById(sale.SellerId) == null) throw new InvalidOperationException("Seller Id not exist");
-			if (sale.Cost <= 0 || sale.Cost > int.MaxValue) throw new ArgumentOutOfRangeException("Summa out of range");
+			if (sale.Cost <= 0 || sale.Cost > int.MaxValue - 1) throw new ArgumentOutOfRangeException("Summa out of range");
 			if (sale.Date == null) throw new ArgumentNullException("Date is null");
 		}
 

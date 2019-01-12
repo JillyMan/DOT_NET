@@ -1,4 +1,5 @@
 ﻿using BL.Abstractions;
+using DAL;
 using DAL.Abstractions;
 using DAL.Models;
 using System;
@@ -75,7 +76,7 @@ namespace BL.Services
 				throw new ArgumentNullException("Product name empty or null");
 			}
 
-			if(Product.Name.Length > 0 && Product.Name.Length < 100)
+			if(Product.Name.Length < 0 && Product.Name.Length > 100)
 			{
 				throw new ArgumentOutOfRangeException("Product name length out of range");
 			}

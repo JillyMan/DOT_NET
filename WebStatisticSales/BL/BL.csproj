@@ -51,13 +51,11 @@
     <Compile Include="Abstractions\IProductService.cs" />
     <Compile Include="Abstractions\ISaleService.cs" />
     <Compile Include="Abstractions\ISellerService.cs" />
-    <Compile Include="Abstractions\IUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ClientService.cs" />
     <Compile Include="Services\ProductService.cs" />
     <Compile Include="Services\SaleService.cs" />
     <Compile Include="Services\SellerService.cs" />
-    <Compile Include="UnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DAL\DAL.csproj">

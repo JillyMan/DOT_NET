@@ -1,6 +1,4 @@
-﻿using BL.Abstractions;
-using DAL;
-using DAL.Abstractions;
+﻿using DAL.Abstractions;
 using DAL.Models;
 using System;
 
