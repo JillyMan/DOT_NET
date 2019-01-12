@@ -7,7 +7,7 @@ using System.Web.Mvc;
 
 namespace WebStatisticSales.Models
 {
-	public class ManagerIndexView
+	public class SellerIndexView
 	{
 		[Display(Name = "Ид")]
 		public int Id { get; set; }
@@ -16,7 +16,7 @@ namespace WebStatisticSales.Models
 		public string Name { get; set; }
 	}
 
-	public class ManagerCreateView
+	public class SellerCreateView
 	{
 		[Required]
 		[StringLength(50, MinimumLength = 3, ErrorMessage = "Длина строки от 3 до 50")]
@@ -24,7 +24,7 @@ namespace WebStatisticSales.Models
 		public string Name { get; set; }
 	}
 
-	public class ManagerEditView
+	public class SellerEditView
 	{
 		[Required]
 		[HiddenInput(DisplayValue = false)]

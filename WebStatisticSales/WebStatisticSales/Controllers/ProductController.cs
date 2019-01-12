@@ -1,4 +1,5 @@
-﻿using DAL.Abstractions;
+﻿using BL.Services;
+using DAL.Abstractions;
 using DAL.Models;
 using System;
 using System.Collections.Generic;
@@ -10,13 +11,10 @@ namespace WebStatisticSales.Controllers
 {
     public class ProductController : Controller
     {
-		private SalesDbContext _context;
-		private IGenericRepository<Product> _repository;
+		private ProductService productService = new ProductService();
 
 		public ProductController()
 		{
-			_context = new SalesDbContext();
-			_repository = new DAL.GenericRepository<Product>(_context);
 		}
 
 		public ActionResult Index()
@@ -28,7 +26,7 @@ namespace WebStatisticSales.Controllers
 		public PartialViewResult Load()
 		{
 			var clientsView = AutoMapper.Mapper.Map<IEnumerable<Product>,
-				List<Models.ProductIndexView>>(_repository.Get());
+				List<Models.ProductIndexView>>(productService.Get());
 
 			return PartialView(clientsView);
 		}
@@ -48,13 +46,18 @@ namespace WebStatisticSales.Controllers
 			{
 				var clientForSave = AutoMapper.Mapper.Map<Product>(product);
 
-				_repository.Insert(clientForSave);
-				_repository.Save();
+				try
+				{
+					productService.AddProduct(clientForSave);
+				}
+				catch(Exception e)
+				{
+					return Json(new { result = false, message = e.Message });
+				}
 
 				return Json(new { result = true });
 			}
-
-			return Json(new { result = false, message = "Не удалось добавить продукт" } );
+			return Json(new { result = false, message = "Model is invalid" } );
 		}
 
 		[Authorize(Roles = "Admin")]
@@ -63,7 +66,7 @@ namespace WebStatisticSales.Controllers
 		{
 			if (id != null)
 			{
-				var clienEditView = AutoMapper.Mapper.Map<Models.ProductEditView>(_repository.GetById(id));
+				var clienEditView = AutoMapper.Mapper.Map<Models.ProductEditView>(productService.GetById(id.Value));
 				return PartialView(clienEditView);
 			}
 			return PartialView("~/Views/Shared/Error.cshtml");
@@ -77,10 +80,15 @@ namespace WebStatisticSales.Controllers
 			{
 				var clientForUpdate = AutoMapper.Mapper.Map<Product>(client);
 
-				_repository.Update(clientForUpdate);
-				_repository.Save();
-
-				return Json(new { result = true });
+				try
+				{
+					productService.EditProduct(clientForUpdate);
+					return Json(new { result = true });
+				}
+				catch (Exception e)
+				{
+					return Json(new { result = true, message=e.Message });
+				}
 			}
 			return Json(new { result = false });
 		}
@@ -89,16 +97,22 @@ namespace WebStatisticSales.Controllers
 		[HttpPost]
 		public JsonResult Delete(int? id)
 		{
-			_repository.Delete(id);
-			_repository.Save();
-			return Json(new { result = true });
+			try
+			{
+				productService.Delete(id.Value);
+				return Json(new { result = true });
+			}
+			catch (Exception e)
+			{
+				return Json(new { result = false, message=e.Message });
+			}
 		}
 
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
-				_context.Dispose();
+				productService.Dispose();
 			}
 
 			base.Dispose(disposing);

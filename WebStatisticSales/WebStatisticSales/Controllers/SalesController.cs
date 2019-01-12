@@ -1,14 +1,10 @@
 ﻿using AutoMapper;
 using BL.Services;
-using DAL;
-using DAL.Abstractions;
 using DAL.Models;
 using PagedList;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Web;
 using System.Web.Mvc;
 using WebStatisticSales.Models;
 
@@ -17,19 +13,12 @@ namespace WebStatisticSales.Controllers
 	public class SalesController : Controller
     {
 		private SaleService saleService = new SaleService();
-
-		private SalesDbContext _context;
-
-		private IGenericRepository<Client> _repositoryClients;
-		private IGenericRepository<Seller> _repositorySellers;
-		private IGenericRepository<Product> _repositoryProducts;
+		private ProductService productService = new ProductService();
+		private ClientService clientService = new ClientService();
+		private SellerService sellerService = new SellerService();
 
 		public SalesController()
-		{
-			_context = new SalesDbContext();
-			_repositoryClients  = new GenericRepository<Client>(_context);
-			_repositorySellers = new GenericRepository<Seller>(_context);
-			_repositoryProducts = new GenericRepository<Product>(_context);
+		{			
 		}
 
         [HttpGet]
@@ -83,9 +72,13 @@ namespace WebStatisticSales.Controllers
 		[HttpGet]
 		public PartialViewResult Create()
 		{
-			ViewBag.Clients = new SelectList(_repositoryClients.Get(), "Id", "Name");
-			ViewBag.Products = new SelectList(_repositoryProducts.Get(), "Id", "Name");
-			ViewBag.Sellers = new SelectList(_repositorySellers.Get(), "Id", "Name");
+			//ViewBag.Clients = new SelectList(_repositoryClients.Get(), "Id", "Name");
+			//ViewBag.Products= new SelectList(_repositoryProducts.Get(), "Id", "Name");
+			//ViewBag.Sellers = new SelectList(_repositorySellers.Get(), "Id", "Name");
+
+			ViewBag.Clients = new SelectList(clientService.Get(), "Id", "Name");
+			ViewBag.Products = new SelectList(productService.Get(), "Id", "Name");
+			ViewBag.Sellers = new SelectList(sellerService.Get(), "Id", "Name");
 
 			return PartialView();
 		}
@@ -145,10 +138,9 @@ namespace WebStatisticSales.Controllers
 
 				var editSaleView = Mapper.Map<SaleEditView>(sale);
 
-				//TODO: use unit of work for geting values..
-				ViewBag.Clients = new SelectList(_repositoryClients.Get(), "Id", "Name");
-				ViewBag.Products = new SelectList(_repositoryProducts.Get(), "Id", "Name");
-				ViewBag.Sellers = new SelectList(_repositorySellers.Get(), "Id", "Name");
+				ViewBag.Clients = new SelectList(clientService.Get(), "Id", "Name");
+				ViewBag.Products = new SelectList(productService.Get(), "Id", "Name");
+				ViewBag.Sellers = new SelectList(sellerService.Get(), "Id", "Name");
 
 				return PartialView(editSaleView);
 			}
@@ -172,8 +164,21 @@ namespace WebStatisticSales.Controllers
 			}
 			catch (Exception e)
 			{
-				return Json(new { result=false, message = "Can't edit, server error"});
+				return Json(new { result=false, message = e.Message });
 			}
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				productService.Dispose();
+				clientService.Dispose();
+				sellerService.Dispose();
+				saleService.Dispose();
+			}
+
+			base.Dispose(disposing);
 		}
 	}
 }

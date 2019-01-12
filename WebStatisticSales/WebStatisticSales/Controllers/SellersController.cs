@@ -1,35 +1,33 @@
 ﻿using AutoMapper;
 using BL.Services;
-using DAL.Abstractions;
 using DAL.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
+using WebStatisticSales.Models;
 
 namespace WebStatisticSales.Controllers
 {
-    public class ClientsController : Controller
-	{
-		private ClientService clientService = new ClientService();
-
-		public ClientsController()
+    public class SellersController : Controller
+    {
+		private SellerService sellerService = new SellerService();
+		
+		public SellersController()
 		{
 		}
 
-        public ActionResult Index()
-        {
-            return View();
-        }
+		public ActionResult Index()
+		{
+			return View();
+		}
 
 		[HttpGet]
 		public PartialViewResult Load()
 		{
-			var clientsView = AutoMapper.Mapper.Map<IEnumerable<DAL.Models.Client>, 
-				List<Models.ClientIndexView>>(clientService.Get());
+			var clientsView = AutoMapper.Mapper.Map<IEnumerable<Seller>,
+				List<SellerIndexView>>(sellerService.Get());
 
-			return PartialView(clientsView);		
+			return PartialView(clientsView);
 		}
 
 		[Authorize(Roles = "Admin")]
@@ -41,38 +39,37 @@ namespace WebStatisticSales.Controllers
 
 		[Authorize(Roles = "Admin")]
 		[HttpPost]
-		public JsonResult Create([Bind(Include = "Name")] Models.ClientCreateView client)
+		public JsonResult Create([Bind(Include = "Name")] SellerCreateView seller)
 		{
 			if (ModelState.IsValid)
 			{
-				var clientForSave = AutoMapper.Mapper.Map<Client>(client);
-
+				var sellerForSave = Mapper.Map<Seller>(seller);
 				try
 				{
-					clientService.AddClient(clientForSave);				
+					sellerService.AddSeller(sellerForSave);
 					return Json(new { result = true });
 				}
-				catch(Exception e)
+				catch (Exception e)
 				{
-					return Json(new { result = false, message="Server error, when try add clietn" });
+					return Json(new { result = false, message = e.Message });
 				}
-
 			}
-			return Json(new { result = false, message="Invalid model" });
+			return Json(new { result = false, message = "Models is invalid" });
 		}
 
 		[Authorize(Roles = "Admin")]
 		[HttpGet]
 		public PartialViewResult Edit(int? id)
 		{
-			if(id > 0)
+			if (id != null)
 			{
 				try
 				{
-					var clienEditView = Mapper.Map<Models.ClientEditView>(clientService.GetById(id.Value));
+					var clienEditView = Mapper.Map<SellerEditView>(sellerService.GetById(id.Value));
+					//Error
 					return PartialView(clienEditView);
 				}
-				catch(Exception e)
+				catch (Exception e)
 				{
 					return PartialView("~/Views/Shared/Error.cshtml");
 				}
@@ -82,15 +79,14 @@ namespace WebStatisticSales.Controllers
 
 		[Authorize(Roles = "Admin")]
 		[HttpPost]
-		public JsonResult Edit([Bind(Include = "Id,Name")] Models.ClientEditView client)
+		public JsonResult Edit([Bind(Include = "Id,Name")] SellerEditView seller)
 		{
 			if (ModelState.IsValid)
 			{
-				var clientForUpdate = Mapper.Map<Client>(client);
-
+				var sellerForUpdate = AutoMapper.Mapper.Map<Seller>(seller);
 				try
-				{	
-					clientService.EditClient(clientForUpdate);
+				{
+					sellerService.EditSeller(sellerForUpdate);
 					return Json(new { result = true });
 				}
 				catch (Exception e)
@@ -98,7 +94,7 @@ namespace WebStatisticSales.Controllers
 					return Json(new { result = false, message = e.Message });
 				}
 			}
-			return Json(new { result = false, model="Model is invalid"});
+			return Json(new { result = false, message="Model is invlid" });
 		}
 
 		[Authorize(Roles = "Admin")]
@@ -107,12 +103,12 @@ namespace WebStatisticSales.Controllers
 		{
 			try
 			{
-				clientService.Delete(id.Value);
+				sellerService.Delete(id.Value);
 				return Json(new { result = true });
 			}
 			catch (Exception e)
 			{
-				return Json(new { result = false });
+				return Json(new { result = false, message = e.Message });
 			}
 		}
 
@@ -120,7 +116,7 @@ namespace WebStatisticSales.Controllers
 		{
 			if (disposing)
 			{
-				clientService.Dispose();
+				sellerService.Dispose();
 			}
 
 			base.Dispose(disposing);

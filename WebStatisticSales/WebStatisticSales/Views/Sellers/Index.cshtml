@@ -2,7 +2,7 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Информация о клиентах</h2>
+<h2>Информация о продовцах</h2>
 
 <div id="loader">
     <h2>Идет загрузка данных...</h2>
@@ -11,12 +11,12 @@
 
 <div class="row">
     <div class="col-sm-6">
-        <div id="data_clients"> </div>
+        <div id="data_sellers"> </div>
     </div>
     <div class="col-sm-5">
         @if (User.IsInRole("Admin"))
         {
-            <button id="openCreateFormBtn" class="btn btn-primary">Добавить клиента</button>
+            <button id="openCreateFormBtn" class="btn btn-primary">Добавить продавца</button>
         }
         <div id="dialog_form"></div>
     </div>
@@ -32,16 +32,16 @@
 
     openAddForm = function () {
         console.log("Create opening");
-        $("#dialog_form").load('@Url.Action("Create", "Clients")');
+        $("#dialog_form").load('@Url.Action("Create", "Sellers")');
     }
 
     openEditForm = function (idClient) {
         console.log("Edit opening")
-        $("#dialog_form").load('@Url.Action("Edit", "Clients")/' + idClient);
+        $("#dialog_form").load('@Url.Action("Edit", "Sellers")/' + idClient);
     }
 
-    function deleteClient(id) {
-        $.post('@Url.Action("Delete", "Clients")/'+ id,
+    function deleteSeller(id) {
+        $.post('@Url.Action("Delete", "Sellers")/'+ id,
             function () {
                 loadData();
             }
@@ -50,7 +50,7 @@
 
     function loadData() {
         $("#loader").css('display', "display");
-        $("#data_clients").load('@Url.Action("Load", "Clients")',
+        $("#data_sellers").load('@Url.Action("Load", "Sellers")',
             function () {
                 $("#loader").css('display', "none");
             }

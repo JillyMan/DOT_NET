@@ -1,9 +1,5 @@
 ﻿using AutoMapper;
 using DAL.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using WebStatisticSales.Models;
 
 namespace WebStatisticSales
@@ -14,15 +10,18 @@ namespace WebStatisticSales
 		{
 			Mapper.Initialize(cfg => {
 				cfg.CreateMap<Client, ClientIndexView>();
-				cfg.CreateMap<Client, ClientCreateView>();
-				cfg.CreateMap<Client, ClientEditView>();
-
-			//	cfg.CreateMap<Client, ClientIndexView>().ReverseMap();
-				cfg.CreateMap<Client, ClientEditView>().ReverseMap();
 				cfg.CreateMap<Client, ClientCreateView>().ReverseMap();
+				cfg.CreateMap<Client, ClientEditView>();
+				cfg.CreateMap<Client, ClientEditView>().ReverseMap();
 
-			//	cfg.CreateMap<Product, ProductIndexView>().ReverseMap();
+				cfg.CreateMap<Seller, SellerIndexView>();
+				cfg.CreateMap<Seller, SellerCreateView>().ReverseMap();
+				cfg.CreateMap<Seller, SellerEditView>();
+				cfg.CreateMap<Seller, SellerEditView>().ReverseMap();
+
+				cfg.CreateMap<Product, ProductIndexView>();
 				cfg.CreateMap<Product, ProductCreateView>().ReverseMap();
+				cfg.CreateMap<Product, ProductEditView>();
 				cfg.CreateMap<Product, ProductEditView>().ReverseMap();
 
 				cfg.CreateMap<Sale, SaleView>()
@@ -32,17 +31,6 @@ namespace WebStatisticSales
 
 				cfg.CreateMap<SaleCreateView, Sale>();
 				cfg.CreateMap<SaleEditView, Sale>();
-
-				/* 
-					Id = sale.Id,
-					Cost = sale.Cost,
-					Date = sale.Date,
-					ClientId = sale.ClientId.Value,
-					SellerId = sale.SellerId.Value,
-					ProductId = sale.ProductId.Value,
-				*/
-				//cfg.CreateMap<Sale, Sa{editView>().ReverseMap();
-				//cfg.CreateMap<Sale, SaleCreateView>().ReverseMap();
 			});
 		}
 	}
