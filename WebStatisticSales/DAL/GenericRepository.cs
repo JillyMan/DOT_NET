@@ -81,11 +81,6 @@ namespace DAL
 			return container.Find(id);
 		}
 
-		public void Save()
-		{
-			context.SaveChanges();
-		}
-
 		public virtual void Update(T item)
 		{
 			if(item == null)

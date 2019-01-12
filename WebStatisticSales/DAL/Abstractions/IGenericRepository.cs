@@ -12,6 +12,5 @@ namespace DAL.Abstractions
 		void Update(T item);
 		void Delete(object id);
 		void Delete(T item);
-		void Save();
 	}
 }

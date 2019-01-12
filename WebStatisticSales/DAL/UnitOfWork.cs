@@ -1,12 +1,14 @@
-﻿using DAL;
+﻿using BL.Abstractions;
+using DAL;
 using DAL.Abstractions;
+using DAL.Models;
 using System;
 
-namespace BL
+namespace DAL
 {
-    public class UnitOfWork : IDisposable
+    public class UnitOfWork : IUnitOfWork
     {
-		private DAL.Models.SalesDbContext _context = new DAL.Models.SalesDbContext();
+		private SalesDbContext _context = new SalesDbContext();
 		private bool _disposed = false;
 
 		public IGenericRepository<Entity> GetRepository<Entity>() where Entity : class
