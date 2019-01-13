@@ -81,12 +81,12 @@ namespace WebStatisticSales.Models
 		[Display(Name = "Название продукта")]
 		public int ProductId { get; set; }
 
-		[Required]
+		[Required(ErrorMessage = "Стоимость")]
 		[Display(Name = "Стоимость")]
 		[Range(1, int.MaxValue, ErrorMessage = "Недопустимая цена")]
 		public int Cost { get; set; }
 
-		[Required]
+		[Required(ErrorMessage = "Дату")]
 		[DataType(DataType.Date)]
 		[Display(Name = "Дата продажи")]
 		public DateTime Date { get; set; }

@@ -42,10 +42,16 @@
 
     function deleteClient(id) {
         $.post('@Url.Action("Delete", "Clients")/'+ id,
-            function () {
-                loadData();
+            function (data) {
+                if (data.result == true) {
+                    loadData();
+                }
+                else {
+                    alert("Нельзя удалить клиента.");
+                }
             }
         );
+        return false;
     }
 
     function loadData() {

@@ -11,6 +11,7 @@
             <div class="modal-body">
                 @using (Html.BeginForm())
                 {
+                    <label id="serverError"></label>
                     @Html.ValidationSummary(false)
                     @Html.HiddenFor(m => m.Id);
                     <div class="form-group">
@@ -38,8 +39,14 @@
                 $.post('@Url.Action("Edit", "Clients")',
                     $("form").serialize(),
                     function (data, textStatus, jHXR) {
-                        hideEditClient();
-                        loadData();
+                        if (data.result == true) {
+                            hideEditClient();
+                            loadData();
+                        }
+                        else {
+                            var message = data.message != undefined ? data.message : "Error on server";
+                            $("#serverError").text(message);
+                        }
                     }
                 );
             });

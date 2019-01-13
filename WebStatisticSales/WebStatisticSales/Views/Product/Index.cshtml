@@ -33,14 +33,21 @@
 
     openEditForm = function (idClient) {
         $("#dialog_form").load('@Url.Action("Edit", "Product")/' + idClient);
+        return false;
     }
 
-    function deleteClient(id) {
+    function deleteProduct(id) {
         $.post('@Url.Action("Delete", "Product")/'+ id,
-            function () {
-                loadData();
+            function (data) {
+                if (data.result == true) {
+                    loadData();
+                }
+                else {
+                    alert("Нельзя удалить продукт.");
+                }
             }
         );
+        return false;
     }
   
     function loadData() {

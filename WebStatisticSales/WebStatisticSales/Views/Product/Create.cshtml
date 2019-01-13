@@ -13,6 +13,7 @@
             <div class="modal-body">           
                 @using (Html.BeginForm())
                 {
+                    <label id="serverError"></label>
                     @Html.ValidationSummary(false)
                     <div class="form-group">
                         @Html.LabelFor(m => m.Name)
@@ -40,11 +41,13 @@
                 $.post('@Url.Action("Create", "Product")',
                     $("form").serialize(),
                     function (data, textStatus, jHXR) {
-                        if (data != undefined) {
+                        if (data.result == true) {
                             hideCreateForm();
                             loadData();
-                        } else {
-                            $("#serverError").val(textStatus);
+                        }
+                        else {
+                            var message = data.message != undefined ? data.message : "Error on server";
+                            $("#serverError").text(message);
                         }
                     });
             });

@@ -38,14 +38,21 @@
     openEditForm = function (idClient) {
         console.log("Edit opening")
         $("#dialog_form").load('@Url.Action("Edit", "Sellers")/' + idClient);
+        return false;
     }
 
     function deleteSeller(id) {
         $.post('@Url.Action("Delete", "Sellers")/'+ id,
-            function () {
-                loadData();
+            function (data) {
+                if (data.result == true) {
+                    loadData();
+                }
+                else {
+                    alert("Нельзя удалить продовца");
+                }
             }
         );
+        return false;
     }
 
     function loadData() {

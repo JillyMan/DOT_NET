@@ -82,7 +82,7 @@ namespace BL.Services
 			}
 		}
 
-		private void Dispose(bool dispose)
+		protected virtual void Dispose(bool dispose)
 		{
 			if (!disposed)
 			{

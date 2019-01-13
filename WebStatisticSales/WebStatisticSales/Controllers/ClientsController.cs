@@ -26,7 +26,7 @@ namespace WebStatisticSales.Controllers
 		[HttpGet]
 		public PartialViewResult Load()
 		{
-			var clientsView = AutoMapper.Mapper.Map<IEnumerable<DAL.Models.Client>, 
+			var clientsView = Mapper.Map<IEnumerable<Client>, 
 				List<Models.ClientIndexView>>(clientService.Get());
 
 			return PartialView(clientsView);		
@@ -45,7 +45,7 @@ namespace WebStatisticSales.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				var clientForSave = AutoMapper.Mapper.Map<Client>(client);
+				var clientForSave = Mapper.Map<Client>(client);
 
 				try
 				{
@@ -54,7 +54,7 @@ namespace WebStatisticSales.Controllers
 				}
 				catch(Exception e)
 				{
-					return Json(new { result = false, message="Server error, when try add clietn" });
+					return Json(new { result = false, message="Server error, when try add client" });
 				}
 
 			}
@@ -63,13 +63,13 @@ namespace WebStatisticSales.Controllers
 
 		[Authorize(Roles = "Admin")]
 		[HttpGet]
-		public PartialViewResult Edit(int? id)
+		public PartialViewResult Edit(int id)
 		{
 			if(id > 0)
 			{
 				try
 				{
-					var clienEditView = Mapper.Map<Models.ClientEditView>(clientService.GetById(id.Value));
+					var clienEditView = Mapper.Map<Models.ClientEditView>(clientService.GetById(id));
 					return PartialView(clienEditView);
 				}
 				catch(Exception e)
@@ -103,11 +103,11 @@ namespace WebStatisticSales.Controllers
 
 		[Authorize(Roles = "Admin")]
 		[HttpPost]
-		public JsonResult Delete(int? id)
+		public JsonResult Delete(int id)
 		{
 			try
 			{
-				clientService.Delete(id.Value);
+				clientService.Delete(id);
 				return Json(new { result = true });
 			}
 			catch (Exception e)

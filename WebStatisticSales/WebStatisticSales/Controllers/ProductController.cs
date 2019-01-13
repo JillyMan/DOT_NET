@@ -1,11 +1,10 @@
-﻿using BL.Services;
-using DAL.Abstractions;
+﻿using AutoMapper;
+using BL.Services;
 using DAL.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
+using WebStatisticSales.Models;
 
 namespace WebStatisticSales.Controllers
 {
@@ -25,8 +24,8 @@ namespace WebStatisticSales.Controllers
 		[HttpGet]
 		public PartialViewResult Load()
 		{
-			var clientsView = AutoMapper.Mapper.Map<IEnumerable<Product>,
-				List<Models.ProductIndexView>>(productService.Get());
+			var clientsView = Mapper.Map<IEnumerable<Product>,
+				List<ProductIndexView>>(productService.Get());
 
 			return PartialView(clientsView);
 		}
@@ -44,7 +43,7 @@ namespace WebStatisticSales.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				var clientForSave = AutoMapper.Mapper.Map<Product>(product);
+				var clientForSave = Mapper.Map<Product>(product);
 
 				try
 				{
@@ -62,12 +61,23 @@ namespace WebStatisticSales.Controllers
 
 		[Authorize(Roles = "Admin")]
 		[HttpGet]
-		public PartialViewResult Edit(int? id)
-		{
-			if (id != null)
+		public PartialViewResult Edit(int id)
+		{	
+			if(id > 0)
 			{
-				var clienEditView = AutoMapper.Mapper.Map<Models.ProductEditView>(productService.GetById(id.Value));
-				return PartialView(clienEditView);
+				try
+				{
+					var client = productService.GetById(id);
+					if(client != null)
+					{
+						var clienEditView = Mapper.Map<ProductEditView>(client);
+						return PartialView(clienEditView);
+					}
+				}
+				catch(Exception e)
+				{
+					return PartialView("~/Views/Shared/Error.cshtml");
+				}
 			}
 			return PartialView("~/Views/Shared/Error.cshtml");
 		}
@@ -78,7 +88,7 @@ namespace WebStatisticSales.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				var clientForUpdate = AutoMapper.Mapper.Map<Product>(client);
+				var clientForUpdate = Mapper.Map<Product>(client);
 
 				try
 				{
@@ -95,16 +105,16 @@ namespace WebStatisticSales.Controllers
 
 		[Authorize(Roles = "Admin")]
 		[HttpPost]
-		public JsonResult Delete(int? id)
+		public JsonResult Delete(int id)
 		{
 			try
 			{
-				productService.Delete(id.Value);
+				productService.Delete(id);
 				return Json(new { result = true });
 			}
 			catch (Exception e)
 			{
-				return Json(new { result = false, message=e.Message });
+				return Json(new { result = false });
 			}
 		}
 

@@ -72,10 +72,6 @@ namespace WebStatisticSales.Controllers
 		[HttpGet]
 		public PartialViewResult Create()
 		{
-			//ViewBag.Clients = new SelectList(_repositoryClients.Get(), "Id", "Name");
-			//ViewBag.Products= new SelectList(_repositoryProducts.Get(), "Id", "Name");
-			//ViewBag.Sellers = new SelectList(_repositorySellers.Get(), "Id", "Name");
-
 			ViewBag.Clients = new SelectList(clientService.Get(), "Id", "Name");
 			ViewBag.Products = new SelectList(productService.Get(), "Id", "Name");
 			ViewBag.Sellers = new SelectList(sellerService.Get(), "Id", "Name");
@@ -106,22 +102,18 @@ namespace WebStatisticSales.Controllers
 		}
 
 		[Authorize(Roles = "Admin")]
-		[HttpGet]
+		[HttpPost]
 		public JsonResult Delete(int id)
 		{
-			if(id > 0)
+			try
 			{
-				try
-				{
-					saleService.Delete(id);
-					return Json(new { result = true }, JsonRequestBehavior.AllowGet);
-				}
-				catch(Exception e)
-				{
-					return Json(new { result = true, message="Server error, sorry" }, JsonRequestBehavior.AllowGet);
-				}
+				saleService.Delete(id);
+				return Json(new { result = true });
 			}
-			return Json(new { result = false, message = "Can't delete, Sorry.." }, JsonRequestBehavior.AllowGet);
+			catch(Exception e)
+			{
+				return Json(new { result = true, message="Server error, sorry" });
+			}
 		}
 
 		[Authorize(Roles = "Admin")]

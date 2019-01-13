@@ -59,22 +59,17 @@ namespace WebStatisticSales.Controllers
 
 		[Authorize(Roles = "Admin")]
 		[HttpGet]
-		public PartialViewResult Edit(int? id)
-		{
-			if (id != null)
+		public PartialViewResult Edit(int id)
+		{		
+			try
 			{
-				try
-				{
-					var clienEditView = Mapper.Map<SellerEditView>(sellerService.GetById(id.Value));
-					//Error
-					return PartialView(clienEditView);
-				}
-				catch (Exception e)
-				{
-					return PartialView("~/Views/Shared/Error.cshtml");
-				}
+				var clienEditView = Mapper.Map<SellerEditView>(sellerService.GetById(id));
+				return PartialView(clienEditView);
 			}
-			return PartialView("~/Views/Shared/Error.cshtml");
+			catch (Exception e)
+			{
+				return PartialView("~/Views/Shared/Error.cshtml");
+			}
 		}
 
 		[Authorize(Roles = "Admin")]
@@ -99,16 +94,16 @@ namespace WebStatisticSales.Controllers
 
 		[Authorize(Roles = "Admin")]
 		[HttpPost]
-		public JsonResult Delete(int? id)
+		public JsonResult Delete(int id)
 		{
 			try
 			{
-				sellerService.Delete(id.Value);
+				sellerService.Delete(id);
 				return Json(new { result = true });
 			}
 			catch (Exception e)
 			{
-				return Json(new { result = false, message = e.Message });
+				return Json(new { result = false });
 			}
 		}
 

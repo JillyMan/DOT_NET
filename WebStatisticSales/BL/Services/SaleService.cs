@@ -90,7 +90,7 @@ namespace BL.Services
 			if (sale.Date == null) throw new ArgumentNullException("Date is null");
 		}
 
-		private void Dispose(bool dispose)
+		protected virtual void Dispose(bool dispose)
 		{
 			if (!disposed)
 			{
