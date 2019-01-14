@@ -1,11 +1,8 @@
 ﻿using AutoMapper;
 using BL.Services;
-using DAL.Abstractions;
 using DAL.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace WebStatisticSales.Controllers

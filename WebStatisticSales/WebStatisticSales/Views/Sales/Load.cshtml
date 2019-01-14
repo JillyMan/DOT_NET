@@ -122,7 +122,6 @@
     $("#reset_filter_btn").click((event) => {
         event.preventDefault();
         console.log("try clean");
-        //Why with () => {..} don't work, but with function() {..} - OK???
         $("#form_filter :input").each(function () {
             $(this).val("");
         });

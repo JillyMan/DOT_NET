@@ -1,0 +1,58 @@
+﻿@{
+    ViewBag.Title = "View";
+}
+
+@Scripts.Render("~/bundles/jqueryval")
+<script type="text/javascript" src="~/Scripts/google-chart.js"></script>
+
+<style>
+    #block{
+        margin-top: 30px;
+    }
+</style>
+
+<div id="block" class="container">
+    <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+            Диаграммы
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+            <li><a href='@Url.Action("GetBuildProductsYearChart", "Charts")'>Кол-во проданных товаров</a></li>
+            <li><a href='@Url.Action("GetBuildLastSalesChart", "Charts")'>Кол-во продаж за последние года</a></li>
+        </ul>
+    </div>
+
+    <div id="loader">
+        <h2>Идет загрузка данных...</h2>
+        <div class="load_spinner"></div>
+    </div>
+    <div id="charts"></div>
+
+</div>
+
+@section scripts{
+    <script>
+        $(document).ready(() => {
+            $("#charts").load('@Url.Action("GetBuildProductsYearChart", "Charts")', function () {
+                $("#loader").hide();
+            });
+        });
+
+        $(".dropdown a").click(function (event) {
+            event.preventDefault();
+            var href = $(this).attr("href");
+            if (href != undefined) {
+                $(".dropdown-menu").toggle();
+                $("#loader").show();
+                $("#charts").load(href, () => $("#loader").hide());
+            }
+        });
+
+        $(".dropdown-toggle").click((event) => {
+            event.preventDefault();
+            $(".dropdown-menu").toggle();
+        });
+
+    </script>
+}

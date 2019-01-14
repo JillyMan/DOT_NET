@@ -1,9 +1,5 @@
-﻿using DAL.Models;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace WebStatisticSales.Models
@@ -35,7 +31,7 @@ namespace WebStatisticSales.Models
 
 		[Display(Name = "Дата продажи")]
 		[DataType(DataType.Date)]
-		//[DisplayFormat(DataFormatString = "{mm/dd/yyyy}")]
+		[DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}")]
 		public DateTime Date { get; set; }
 	}
 
@@ -59,8 +55,9 @@ namespace WebStatisticSales.Models
 		public int Cost { get; set; }
 
 		[Required(ErrorMessage = "Введите дату")]
-		[DataType(DataType.Date)]
 		[Display(Name = "Дата продажи")]
+		[DataType(DataType.Date)]
+		[DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}")]
 		public DateTime Date { get; set; }
 	}
 
@@ -89,6 +86,7 @@ namespace WebStatisticSales.Models
 		[Required(ErrorMessage = "Дату")]
 		[DataType(DataType.Date)]
 		[Display(Name = "Дата продажи")]
+		[DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}")]
 		public DateTime Date { get; set; }
 	}
 }

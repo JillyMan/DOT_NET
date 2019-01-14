@@ -59,6 +59,7 @@ namespace BL.Services
 				oldSale.ClientId = sale.ClientId;
 				oldSale.SellerId = sale.SellerId;
 				oldSale.ProductId = sale.ProductId;
+				oldSale.Date = sale.Date;
 
 				_repos.Update(oldSale);
 				_database.Save();

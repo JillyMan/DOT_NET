@@ -14,6 +14,7 @@
     {
         <button id="openCreateFormBtn" style="display: none;" class="btn btn-primary">Добавить продажу</button>
     }
+    <div id="chart_div"></div>
 </div>
 
 <div id="dialog_window"></div>
@@ -24,11 +25,16 @@
         $(document).ready(() => {
             console.log("docs ready");
             loadData();
+
         });
 
         $("#openCreateFormBtn").click(() => {
             $("#dialog_window").load('@Url.Action("Create", "Sales")');
         });
+
+        function loadChart() {
+            $("")
+        }
 
         function editSale(id) {
             $("#dialog_window").load('@Url.Action("Edit", "Sales")/' + id);
